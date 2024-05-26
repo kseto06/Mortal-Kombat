@@ -18,11 +18,15 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 public class HomeView extends JPanel {
     //Properties
     JLabel title = new JLabel("MORTAL KOMBAT");
+    JTextField usernameField;
+    JTable serverListTable;
     public JButton hostButton = new JButton("Host Game");
     public JButton joinButton = new JButton("Scan");
     public JButton helpButton = new JButton("Help");
@@ -64,30 +68,47 @@ public class HomeView extends JPanel {
         }
 
         //Title format:
-        title.setFont(new Font("Cambria", Font.BOLD,120));
+        title.setFont(new Font("Cambria", Font.BOLD,90));
         title.setForeground(Color.WHITE);
         title.setSize(1280, 200);
-        title.setLocation(1280/10, 50);
+        title.setLocation(1280/8, 10);
         this.add(title);
 
+        //Username text field
+        usernameField = new JTextField("Enter username:");
+        usernameField.setFont(new Font("Cambria", Font.ITALIC, 38));
+        usernameField.setSize(500, 60);
+        usernameField.setLocation(128+250, 250);
+        usernameField.setHorizontalAlignment(SwingConstants.CENTER);
+        this.add(usernameField);
+
         //Button formatting:
-        hostButton.setFont(new Font("Cambria", Font.PLAIN, 50));
+        hostButton.setFont(new Font("Cambria", Font.PLAIN, 38));
         hostButton.setSize(500, 60);
-        hostButton.setLocation(1280/10+250, 250);
+        hostButton.setLocation(1280/10+250, 315);
         hostButton.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(hostButton);
 
-        joinButton.setFont(new Font("Cambria", Font.PLAIN, 50));
+        /* 
+        joinButton.setFont(new Font("Cambria", Font.PLAIN, 38));
         joinButton.setSize(500, 60);
         joinButton.setLocation(1280/10+250, 350);
         joinButton.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(joinButton);
+        */
 
-        helpButton.setFont(new Font("Cambria", Font.PLAIN, 50));
+        helpButton.setFont(new Font("Cambria", Font.PLAIN, 38));
         helpButton.setSize(500, 60);
-        helpButton.setLocation(1280/10+250, 450);
+        helpButton.setLocation(1280/10+250, 380);
         helpButton.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(helpButton);
+
+        //Table formatting (of server lists):
+        /*
+         * Need to get server data
+         * Initialize column names. One side is server host name, the other is button to join server
+         * 
+         */
 
         this.repaint();
     }

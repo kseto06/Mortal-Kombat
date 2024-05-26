@@ -3,6 +3,7 @@
  * Players can choose their fighters on this screen, once both players are connected to the same server
  */
 
+
 package view;
 
 import java.awt.BasicStroke;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -26,105 +28,132 @@ import javax.swing.JPanel;
 public class CharacterSelectionView extends JPanel implements ActionListener {
     //Properties
     JLabel screenTitleLabel = new JLabel("Choose Your Fighter");
-    JLabel player1NameLabel = new JLabel("Player 1");
-    JLabel player2NameLabel = new JLabel("Player 2");
+    JLabel hostNameLabel = new JLabel("Player 1");
+    JLabel clientNameLabel = new JLabel("Player 2");
     //public JButton startGameButton1 = new JButton("Start Game");
     //public JButton startGameButton2 = new JButton("Start Game");
     JButton chooseScorpionButton = new JButton();
     JButton chooseSubZeroButton = new JButton();
-    public boolean player1Ready, player2Ready = false;
-    static String player1Choice, player2Choice = null;
+    public boolean hostReady, clientReady = false;
+    static String hostChoice, clientChoice = "";
+    public String userType;
 
     //Images in this Class:
-    BufferedImage imgScorpSelection, imgSubZeroSelection, imgBackground;
+    static BufferedImage imgScorpSelection, imgSubZeroSelection, imgEnlargedScorp, imgEnlargedSub, imgBackground; //Small o,ages = 120x240, Enlarged images = 300x600
 
-    //Methods
+    //Methods:
 
-    //paintComponent method here paints the images of the characters, and other parts of the screen:
-    @Override 
+    //paintComponent method here paints the assets of the characters, and other parts of the screen:
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
+
+        //Draw the "Select Character Buttons" on the Screen
         g2d.setStroke(new BasicStroke(4.0f));
         g2d.drawRect(550-60, 180, 120, 240);
         g2d.drawRect(550+70, 180, 120, 240);
+        g.drawImage(imgScorpSelection, 550-60, 180, this);
+        g.drawImage(imgSubZeroSelection, 620, 180, this);
+
+
+        //Based on the selection, draw an enlarged image of who was selected:
+        if (hostChoice == "Scorpion") {
+            drawScorpion(g, 50, 70);
+        } else if (clientChoice == "Scorpion") {
+            drawScorpion(g, 850, 70);
+        }
+
+        if (hostChoice == "Sub Zero") { 
+            drawSubZero(g, 50, 70);
+        } else if (clientChoice == "Sub Zero") {
+            drawSubZero(g, 850, 70);
+        }
     }
 
+
     /**
-     * Function to draw Scorpion if chosen on the Character Selection Screen. Position changes depending on who selects
+     * Function to draw larger image of Scorpion if chosen on the Character Selection Screen. Position changes depending on who selects
      */
     private static void drawScorpion(Graphics g, int x, int y) {
-        if (player1Choice == "Scorpion") {
-            //TO-DO: Draw enlarged image of scorpion
-        } else if (player2Choice == "Scorpion") {
-
-        }
-    } 
+        g.drawImage(imgEnlargedScorp, x, y, null);
+    }
 
     /**
-     * Function to draw SubZero if chosen on the Character Selection Screen. Position changes depending on who selects
+     * Function to draw larger image of SubZero if chosen on the Character Selection Screen. Position changes depending on who selects
      */
     private static void drawSubZero(Graphics g, int x, int y) {
-        if (player1Choice == "Sub Zero") {
-            //TO-DO: Draw enlarged image of sub zero on selection
-        } else if (player2Choice == "Sub Zero") {
-
-        }
+        g.drawImage(imgEnlargedSub, x, y, null);
     }
+
 
     @Override
     public void actionPerformed(ActionEvent evt) {
         //Change button functions to be ready/return based on what the user selects
         //TO-DO: NEED LOGIC TO DETERMINE WHO IS PLAYER 1 AND 2 -- PLAYER 1 = HOST, ON THE LEFT OF THE SCREEN. PLAYER 2 = CLIENT, ON THE RIGHT OF THE SCREEN
-        //For if statements, add something like: && currentPlayer == HOST or currentPlayer == CLIENT 
-        //If this is possible, we don't need to put things like player1Ready or player2Ready, since players will only be able to choose their respective things.
+        //For if statements, add something like: && currentPlayer == HOST or currentPlayer == CLIENT
+        //If this is possible, we don't need to put things like hostReady or clientReady, since players will only be able to choose their respective things.
 
-        //For player 1:
-        if (evt.getSource() == chooseScorpionButton && !player1Ready) { 
-            player1Ready = true;
-            player1Choice = "Scorpion";
-        } else if (evt.getSource() == chooseSubZeroButton && !player1Ready) {
-            player1Ready = true;
-            player1Choice = "Sub Zero";
+
+        //For player 1 (Host):
+        if (evt.getSource() == chooseScorpionButton && !hostReady && userType == "Host") {
+            hostReady = true;
+            hostChoice = "Scorpion";
+            System.out.println(userType+" chose Scorpion");
+        } else if (evt.getSource() == chooseSubZeroButton && !hostReady && userType == "Host") {
+            hostReady = true;
+            hostChoice = "Sub Zero";
+            System.out.println(userType+" chose Scorpion");
         }
 
-        //For player 2:
-        if (evt.getSource() == chooseScorpionButton && !player2Ready) {
-            player2Ready = true;
-            player1Choice = "Scorpion";
-        } else if (evt.getSource() == chooseSubZeroButton && !player2Ready) {
-            player2Ready = true;
-            player1Choice = "Sub Zero";
+
+        //For player 2 (Client):
+        if (evt.getSource() == chooseScorpionButton && !clientReady && userType == "Client") {
+            clientReady = true;
+            clientChoice = "Scorpion";
+            System.out.println(userType+" chose Sub");
+        } else if (evt.getSource() == chooseSubZeroButton && !clientReady && userType == "Client") {
+            clientReady = true;
+            clientChoice = "Sub Zero";
+            System.out.println(userType+" chose Sub");
         }
     }
-
-    //Constructor
-    public CharacterSelectionView() {
+ 
+ 
+     //Constructor
+     public CharacterSelectionView() {
         super();
         this.setLayout(null);
         this.setPreferredSize(new Dimension(1280, 720));
+
 
         //Loading the images:
         //Try to read the image from both the jar file and local drive
         InputStream backgroundClass = this.getClass().getResourceAsStream("assets/TitleScreenBackground.jpeg");
         InputStream selectScorpClass = this.getClass().getResourceAsStream("assets/ScorpionSelection.png");
         InputStream selectSubClass = this.getClass().getResourceAsStream("assets/SubZeroSelection.png");
-    
-        if (backgroundClass != null) {
+        InputStream enlargedScorpClass = this.getClass().getResourceAsStream("assets/ScorpionEnlarged.png");
+        InputStream enlargedSubClass = this.getClass().getResourceAsStream("assets/SubZeroEnlarged.png");
+
+        if (selectScorpClass != null && selectSubClass != null) {
             try {
                 imgBackground = ImageIO.read(backgroundClass);
                 imgScorpSelection = ImageIO.read(selectScorpClass);
                 imgSubZeroSelection = ImageIO.read(selectSubClass);
+                imgEnlargedScorp = ImageIO.read(enlargedScorpClass);
+                imgEnlargedSub = ImageIO.read(enlargedSubClass);
             } catch (IOException e) {
                 System.out.println("Unable to read/load image from jar");
                 e.printStackTrace();
             }
         } else { //If it can't be found on the jar, search it locally
             try {
-                imgBackground = ImageIO.read(new File("assets/TitleScreenBackground.jpeg"));
+                //imgBackground = ImageIO.read(new File("assets/TitleScreenBackground.jpeg"));
                 imgScorpSelection = ImageIO.read(new File("assets/ScorpionSelection.png"));
                 imgSubZeroSelection = ImageIO.read(new File("assets/SubZeroSelection.png"));
+                imgEnlargedScorp = ImageIO.read(new File("assets/ScorpionEnlarged.png"));
+                imgEnlargedSub = ImageIO.read(new File("assets/SubZeroEnlarged.png"));
             } catch (IOException e) {
                 System.out.println("Unable to read/load image");
                 e.printStackTrace();
@@ -138,36 +167,41 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
         screenTitleLabel.setLocation(640-160, 10);
         this.add(screenTitleLabel);
 
-        player1NameLabel.setFont(new Font("Cambria", Font.PLAIN, 20));
-        player1NameLabel.setForeground(Color.BLACK);
-        player1NameLabel.setSize(700, 30);
-        player1NameLabel.setLocation(150, 30);
-        this.add(player1NameLabel);
 
-        player2NameLabel.setFont(new Font("Cambria", Font.PLAIN, 20));
-        player2NameLabel.setForeground(Color.BLACK);
-        player2NameLabel.setSize(1050, 30);
-        player2NameLabel.setLocation(1000, 30);
-        this.add(player2NameLabel);
+        hostNameLabel.setFont(new Font("Cambria", Font.PLAIN, 20));
+        hostNameLabel.setForeground(Color.BLACK);
+        hostNameLabel.setSize(700, 30);
+        hostNameLabel.setLocation(150, 30);
+        this.add(hostNameLabel);
+
+
+        clientNameLabel.setFont(new Font("Cambria", Font.PLAIN, 20));
+        clientNameLabel.setForeground(Color.BLACK);
+        clientNameLabel.setSize(1050, 30);
+        clientNameLabel.setLocation(1000, 30);
+        this.add(clientNameLabel);
+
 
         //Button formatting:
         chooseScorpionButton.setSize(120, 240);
         chooseScorpionButton.setLocation(550-60, 180);
         chooseScorpionButton.addActionListener(this);
         chooseScorpionButton.setOpaque(false); // Make the button transparent
-        chooseScorpionButton.setContentAreaFilled(false); 
-        chooseScorpionButton.setBorderPainted(false); 
+        chooseScorpionButton.setContentAreaFilled(false);
+        chooseScorpionButton.setBorderPainted(false);
         chooseScorpionButton.setForeground(Color.WHITE);
         this.add(chooseScorpionButton);
+
 
         chooseSubZeroButton.setSize(120, 240);
         chooseSubZeroButton.setLocation(620, 180);
         chooseSubZeroButton.addActionListener(this);
         chooseSubZeroButton.setOpaque(false); // Make the button transparent
-        chooseSubZeroButton.setContentAreaFilled(false); 
-        chooseSubZeroButton.setBorderPainted(false); 
+        chooseSubZeroButton.setContentAreaFilled(false);
+        chooseSubZeroButton.setBorderPainted(false);
         chooseSubZeroButton.setForeground(Color.WHITE);
         this.add(chooseSubZeroButton);
+
 
         this.repaint();
     }

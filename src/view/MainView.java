@@ -16,28 +16,36 @@ import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import network.*;
+
 public class MainView extends JPanel implements ActionListener, KeyListener {
     //Properties
     JFrame frame = new JFrame("View Testing");
     CardLayout cardLayout = new CardLayout();
     HomeView homeView = new HomeView();
     CharacterSelectionView characterSelectionView = new CharacterSelectionView();
+    MulticastServer ms;
+    MulticastClient mc;
 
     //Methods
     @Override
     public void actionPerformed(ActionEvent evt) {
         //If the user presses the host button on the home screen, open SSM to host their game
         if (evt.getSource() == homeView.hostButton) {
-            //One person has joined -- manipulate the CharacterSelectionScreen to have a "waiting for opponent"
+            //One person has joined -- manipulate the characterSelectionView to have a "waiting for opponent" -- TO-DO
+            ms = new MulticastServer("236.169.184.1", 15775);
+            characterSelectionView.userType = "Host";
+            
 
         } else if (evt.getSource() == homeView.joinButton) {
             //Two people now in-game, show the Character Selection Screen 
-            cardLayout.show(this, "characterSelectionScreen");
+            characterSelectionView.userType = "Client";
+            cardLayout.show(this, "characterSelectionView");
         
         } else if (evt.getSource() == homeView.helpButton) {
             //TO-DO: Interactive HelpScreen
         
-        } else if (characterSelectionView.player1Ready == true && characterSelectionView.player2Ready == true) {
+        } else if (characterSelectionView.hostReady == true && characterSelectionView.clientReady == true) {
             //Two people done selecting, start game
 
         } 
@@ -74,7 +82,7 @@ public class MainView extends JPanel implements ActionListener, KeyListener {
         this.setPreferredSize(new Dimension(1280, 720));
         this.setLayout(cardLayout);
         this.add(homeView, "homeScreen");
-        this.add(characterSelectionView, "characterSelectionScreen");
+        this.add(characterSelectionView, "characterSelectionView");
         cardLayout.show(this, "homeScreen");
 
         //Add action listeners to necessary JComponents:
