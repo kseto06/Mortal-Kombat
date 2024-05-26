@@ -1,4 +1,4 @@
-package Panels;
+package view;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -8,12 +8,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class HomeScreen extends JPanel {
+public class HomeView extends JPanel {
     JLabel title = new JLabel("MORTAL KOMBAT");
     public JButton hostButton = new JButton("Host Game");
     public JButton joinButton = new JButton("Join Game");
 
-    public HomeScreen() {
+    public HomeView() {
         super();
         this.setPreferredSize(new Dimension(1280, 720));
         this.setLayout(null);

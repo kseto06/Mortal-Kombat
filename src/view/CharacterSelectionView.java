@@ -1,4 +1,4 @@
-package Panels;
+package view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class CharacterSelectionScreen extends JPanel implements ActionListener {
+public class CharacterSelectionView extends JPanel implements ActionListener {
     //Properties
     public JButton startGameButton1 = new JButton("Start Game");
     public JButton startGameButton2 = new JButton("Start Game"); 
