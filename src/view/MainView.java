@@ -12,10 +12,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import model.Player;
 import network.*;
 
 public class MainView extends JPanel implements ActionListener, KeyListener {
@@ -26,21 +28,34 @@ public class MainView extends JPanel implements ActionListener, KeyListener {
     CharacterSelectionView characterSelectionView = new CharacterSelectionView();
     MulticastServer ms;
     MulticastClient mc;
+    String hostPlayerName, clientPlayerName;
 
     //Methods
     @Override
     public void actionPerformed(ActionEvent evt) {
-        //If the user presses the host button on the home screen, open SSM to host their game
+        //If the user presses the host button on the home screen, open MulticastClient to host their game
+        if (evt.getSource() == mc) {
+            System.out.println(mc.readText());
+        }
+
         if (evt.getSource() == homeView.hostButton) {
             //One person has joined -- manipulate the characterSelectionView to have a "waiting for opponent" -- TO-DO
             ms = new MulticastServer("236.169.184.1", 15775);
             characterSelectionView.userType = "Host";
-            
+            hostPlayerName = homeView.usernameField.getText();
+            try {
+                ms.sendText(hostPlayerName+","+"236.169.184.1"+","+"15775");    
+            } catch (IOException e) {
+                e.printStackTrace();
+            } 
 
-        } else if (evt.getSource() == homeView.joinButton) {
+        } else if (evt.getSource() == homeView.helpButton) {
             //Two people now in-game, show the Character Selection Screen 
+            mc = new MulticastClient("236.169.184.1", 15775, this);
+            mc.connect();
             characterSelectionView.userType = "Client";
             cardLayout.show(this, "characterSelectionView");
+            clientPlayerName = homeView.usernameField.getText();
         
         } else if (evt.getSource() == homeView.helpButton) {
             //TO-DO: Interactive HelpScreen

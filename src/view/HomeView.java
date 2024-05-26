@@ -9,7 +9,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,16 +24,21 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
-public class HomeView extends JPanel {
+import java.util.ArrayList;
+
+public class HomeView extends JPanel implements ActionListener {
     //Properties
     JLabel title = new JLabel("MORTAL KOMBAT");
     JTextField usernameField;
     JTable serverListTable;
+    ArrayList<ArrayList<String>> tableData = new ArrayList<>(); //(Contain's hosting player's name + ip + port?) and (JButton to join)
     public JButton hostButton = new JButton("Host Game");
     public JButton joinButton = new JButton("Scan");
     public JButton helpButton = new JButton("Help");
     BufferedImage imgBackground;
+    Timer timer = new Timer(1000/60, this);
 
     //Methods
     @Override
@@ -41,6 +49,13 @@ public class HomeView extends JPanel {
         g.drawImage(imgBackground, 0, 0, getWidth(), getHeight(), this);
     }
 
+    @Override
+    public void actionPerformed(ActionEvent evt) {
+        if (evt.getSource() == timer) {
+            this.repaint();
+        }
+    }
+
     //Constructor
     public HomeView() {
         super();
@@ -49,7 +64,7 @@ public class HomeView extends JPanel {
 
         //Loading the image:
         //Try to read the image from both the jar file and local drive
-        InputStream backgroundClass = this.getClass().getResourceAsStream("assets/TitleScreenBackground.jpeg");
+        InputStream backgroundClass = this.getClass().getResourceAsStream("src/assets/TitleScreenBackground.jpeg");
     
         if (backgroundClass != null) {
             try {
@@ -60,7 +75,7 @@ public class HomeView extends JPanel {
             }
         } else { //If it can't be found on the jar, search it locally
             try {
-                imgBackground = ImageIO.read(new File("assets/TitleScreenBackground.jpeg"));
+                imgBackground = ImageIO.read(new File("src/assets/TitleScreenBackground.jpeg"));
             } catch (IOException e) {
                 System.out.println("Unable to read/load image");
                 e.printStackTrace();
@@ -71,21 +86,21 @@ public class HomeView extends JPanel {
         title.setFont(new Font("Cambria", Font.BOLD,90));
         title.setForeground(Color.WHITE);
         title.setSize(1280, 200);
-        title.setLocation(1280/8, 10);
+        title.setLocation(1280/5, 10);
         this.add(title);
 
         //Username text field
         usernameField = new JTextField("Enter username:");
         usernameField.setFont(new Font("Cambria", Font.ITALIC, 38));
         usernameField.setSize(500, 60);
-        usernameField.setLocation(128+250, 250);
+        usernameField.setLocation(128+260, 180);
         usernameField.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(usernameField);
 
         //Button formatting:
         hostButton.setFont(new Font("Cambria", Font.PLAIN, 38));
         hostButton.setSize(500, 60);
-        hostButton.setLocation(1280/10+250, 315);
+        hostButton.setLocation(1280/10+260, 245);
         hostButton.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(hostButton);
 
@@ -99,9 +114,19 @@ public class HomeView extends JPanel {
 
         helpButton.setFont(new Font("Cambria", Font.PLAIN, 38));
         helpButton.setSize(500, 60);
-        helpButton.setLocation(1280/10+250, 380);
+        helpButton.setLocation(1280/10+260, 310);
         helpButton.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(helpButton);
+
+        //"Available Server" Label Format:
+        JLabel availableServerLabel = new JLabel("AVAILABLE SERVERS:");
+        availableServerLabel.setFont(new Font("Cambria", Font.BOLD,38));
+        availableServerLabel.setForeground(Color.WHITE);
+        availableServerLabel.setSize(500, 70);
+        availableServerLabel.setLocation(1280/10+260,375);
+        availableServerLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        this.add(availableServerLabel);
+
 
         //Table formatting (of server lists):
         /*
@@ -110,7 +135,7 @@ public class HomeView extends JPanel {
          * 
          */
 
-        this.repaint();
+        timer.start();
     }
 
 }

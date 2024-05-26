@@ -24,6 +24,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class CharacterSelectionView extends JPanel implements ActionListener {
     //Properties
@@ -35,20 +36,26 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
     JButton chooseScorpionButton = new JButton();
     JButton chooseSubZeroButton = new JButton();
     public boolean hostReady, clientReady = false;
+    boolean chooseScorpionPressed, chooseSubZeroPressed = false;
     static String hostChoice, clientChoice = "";
     public String userType;
 
     //Images in this Class:
     static BufferedImage imgScorpSelection, imgSubZeroSelection, imgEnlargedScorp, imgEnlargedSub, imgBackground; //Small o,ages = 120x240, Enlarged images = 300x600
 
+    //Timer, allows for drawing the chosen character
+    /**
+     * The timer that will control the animation, going off at 60fps
+     */
+    Timer timer = new Timer(1000/60, this);
+
     //Methods:
 
-    //paintComponent method here paints the assets of the characters, and other parts of the screen:
+    //paintComponent method here paints the images of the characters, and other parts of the screen:
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-
 
         //Draw the "Select Character Buttons" on the Screen
         g2d.setStroke(new BasicStroke(4.0f));
@@ -60,15 +67,15 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
 
         //Based on the selection, draw an enlarged image of who was selected:
         if (hostChoice == "Scorpion") {
-            drawScorpion(g, 50, 70);
+            drawScorpion(g, 100, 60);
         } else if (clientChoice == "Scorpion") {
-            drawScorpion(g, 850, 70);
+            drawScorpion(g, 900, 60);
         }
 
         if (hostChoice == "Sub Zero") { 
-            drawSubZero(g, 50, 70);
+            drawSubZero(g, 100, 60);
         } else if (clientChoice == "Sub Zero") {
-            drawSubZero(g, 850, 70);
+            drawSubZero(g, 900, 60);
         }
     }
 
@@ -95,27 +102,34 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
         //For if statements, add something like: && currentPlayer == HOST or currentPlayer == CLIENT
         //If this is possible, we don't need to put things like hostReady or clientReady, since players will only be able to choose their respective things.
 
+        //Timer (keeping track of event listeners that happen over a period of time)
+        if (evt.getSource() == timer) {
+            this.repaint();
+        }
 
         //For player 1 (Host):
         if (evt.getSource() == chooseScorpionButton && !hostReady && userType == "Host") {
             hostReady = true;
             hostChoice = "Scorpion";
+            chooseScorpionPressed = true;
             System.out.println(userType+" chose Scorpion");
         } else if (evt.getSource() == chooseSubZeroButton && !hostReady && userType == "Host") {
             hostReady = true;
             hostChoice = "Sub Zero";
+            chooseScorpionPressed = true;
             System.out.println(userType+" chose Scorpion");
         }
-
 
         //For player 2 (Client):
         if (evt.getSource() == chooseScorpionButton && !clientReady && userType == "Client") {
             clientReady = true;
             clientChoice = "Scorpion";
+            chooseSubZeroPressed = true;
             System.out.println(userType+" chose Sub");
         } else if (evt.getSource() == chooseSubZeroButton && !clientReady && userType == "Client") {
             clientReady = true;
             clientChoice = "Sub Zero";
+            chooseSubZeroPressed = true;
             System.out.println(userType+" chose Sub");
         }
     }
@@ -130,11 +144,11 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
 
         //Loading the images:
         //Try to read the image from both the jar file and local drive
-        InputStream backgroundClass = this.getClass().getResourceAsStream("assets/TitleScreenBackground.jpeg");
-        InputStream selectScorpClass = this.getClass().getResourceAsStream("assets/ScorpionSelection.png");
-        InputStream selectSubClass = this.getClass().getResourceAsStream("assets/SubZeroSelection.png");
-        InputStream enlargedScorpClass = this.getClass().getResourceAsStream("assets/ScorpionEnlarged.png");
-        InputStream enlargedSubClass = this.getClass().getResourceAsStream("assets/SubZeroEnlarged.png");
+        InputStream backgroundClass = this.getClass().getResourceAsStream("src/assets/TitleScreenBackground.jpeg");
+        InputStream selectScorpClass = this.getClass().getResourceAsStream("src/assets/ScorpionSelection.png");
+        InputStream selectSubClass = this.getClass().getResourceAsStream("src/assets/SubZeroSelection.png");
+        InputStream enlargedScorpClass = this.getClass().getResourceAsStream("src/assets/ScorpionEnlarged.png");
+        InputStream enlargedSubClass = this.getClass().getResourceAsStream("src/assets/SubZeroEnlarged.png");
 
         if (selectScorpClass != null && selectSubClass != null) {
             try {
@@ -149,11 +163,11 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
             }
         } else { //If it can't be found on the jar, search it locally
             try {
-                //imgBackground = ImageIO.read(new File("assets/TitleScreenBackground.jpeg"));
-                imgScorpSelection = ImageIO.read(new File("assets/ScorpionSelection.png"));
-                imgSubZeroSelection = ImageIO.read(new File("assets/SubZeroSelection.png"));
-                imgEnlargedScorp = ImageIO.read(new File("assets/ScorpionEnlarged.png"));
-                imgEnlargedSub = ImageIO.read(new File("assets/SubZeroEnlarged.png"));
+                imgBackground = ImageIO.read(new File("src/assets/TitleScreenBackground.jpeg"));
+                imgScorpSelection = ImageIO.read(new File("src/assets/ScorpionSelection.png"));
+                imgSubZeroSelection = ImageIO.read(new File("src/assets/SubZeroSelection.png"));
+                imgEnlargedScorp = ImageIO.read(new File("src/assets/ScorpionEnlarged.png"));
+                imgEnlargedSub = ImageIO.read(new File("src/assets/SubZeroEnlarged.png"));
             } catch (IOException e) {
                 System.out.println("Unable to read/load image");
                 e.printStackTrace();
@@ -167,20 +181,17 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
         screenTitleLabel.setLocation(640-160, 10);
         this.add(screenTitleLabel);
 
-
         hostNameLabel.setFont(new Font("Cambria", Font.PLAIN, 20));
         hostNameLabel.setForeground(Color.BLACK);
         hostNameLabel.setSize(700, 30);
         hostNameLabel.setLocation(150, 30);
         this.add(hostNameLabel);
 
-
         clientNameLabel.setFont(new Font("Cambria", Font.PLAIN, 20));
         clientNameLabel.setForeground(Color.BLACK);
         clientNameLabel.setSize(1050, 30);
         clientNameLabel.setLocation(1000, 30);
         this.add(clientNameLabel);
-
 
         //Button formatting:
         chooseScorpionButton.setSize(120, 240);
@@ -191,7 +202,7 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
         chooseScorpionButton.setBorderPainted(false);
         chooseScorpionButton.setForeground(Color.WHITE);
         this.add(chooseScorpionButton);
-
+        chooseScorpionButton.addActionListener(this);
 
         chooseSubZeroButton.setSize(120, 240);
         chooseSubZeroButton.setLocation(620, 180);
@@ -201,8 +212,9 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
         chooseSubZeroButton.setBorderPainted(false);
         chooseSubZeroButton.setForeground(Color.WHITE);
         this.add(chooseSubZeroButton);
+        chooseSubZeroButton.addActionListener(this);
 
-
-        this.repaint();
+        //Start timer
+        timer.start();
     }
 }
