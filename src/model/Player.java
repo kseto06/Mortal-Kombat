@@ -14,4 +14,11 @@ public class Player {
             fighter = new SubzeroFighter();
         }
     }
+
+    //Constructor
+    public Player(String name, Fighter fighter, boolean movementDisabled) {
+        this.name = name;
+        this.fighter = fighter;
+        this.movementDisabled = movementDisabled;
+    }
 }
