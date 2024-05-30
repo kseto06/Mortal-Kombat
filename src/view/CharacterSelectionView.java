@@ -19,12 +19,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import model.GameState;
 
 public class CharacterSelectionView extends JPanel implements ActionListener {
     //Properties
@@ -35,13 +36,13 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
     //public JButton startGameButton2 = new JButton("Start Game");
     JButton chooseScorpionButton = new JButton();
     JButton chooseSubZeroButton = new JButton();
+    GameState state;
     public boolean hostReady, clientReady = false;
-    boolean chooseScorpionPressed, chooseSubZeroPressed = false;
-    static String hostChoice, clientChoice = "";
-    public String userType;
+    public String hostChoice, clientChoice = "";
+    //ArrayList<String> choiceList = new ArrayList<String>();
 
     //Images in this Class:
-    static BufferedImage imgScorpSelection, imgSubZeroSelection, imgEnlargedScorp, imgEnlargedSub, imgBackground; //Small o,ages = 120x240, Enlarged images = 300x600
+    static BufferedImage imgScorpSelection, imgSubZeroSelection, imgEnlargedScorp, imgEnlargedSub, imgBackground; //Small images = 120x240, Enlarged images = 300x600
 
     //Timer, allows for drawing the chosen character
     /**
@@ -64,19 +65,36 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
         g.drawImage(imgScorpSelection, 550-60, 180, this);
         g.drawImage(imgSubZeroSelection, 620, 180, this);
 
+        // System.out.println("Is player 1 null? "+(state.player1 == null));
+        // System.out.println("Is player 2 null? "+(state.player2 == null));
 
-        //Based on the selection, draw an enlarged image of who was selected:
-        if (hostChoice == "Scorpion") {
+        if (state.player1 == null || state.player2 == null) { return; }
+
+        // System.out.println(state.player1.fighter.name);
+        // System.out.println(state.player2.fighter.name);
+
+        hostNameLabel.setText(state.player1.name);
+        clientNameLabel.setText(state.player2.name);
+
+        //Based on the selection, draw an enlarged image of who was selected. 
+        //Read the text sent from SSM, and update based on the SSM sendText choice
+        if (state.player1.fighter.name.equals("Scorpion")) {
             drawScorpion(g, 100, 60);
-        } else if (clientChoice == "Scorpion") {
+        } 
+        
+        if (state.player2.fighter.name.equals("Scorpion")) {
             drawScorpion(g, 900, 60);
         }
 
-        if (hostChoice == "Sub Zero") { 
+        if (state.player1.fighter.name.equals("Subzero")) { 
             drawSubZero(g, 100, 60);
-        } else if (clientChoice == "Sub Zero") {
+        } 
+        
+        if (state.player2.fighter.name.equals("Subzero")) {
             drawSubZero(g, 900, 60);
         }
+
+        this.repaint();
     }
 
 
@@ -102,45 +120,46 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
         //For if statements, add something like: && currentPlayer == HOST or currentPlayer == CLIENT
         //If this is possible, we don't need to put things like hostReady or clientReady, since players will only be able to choose their respective things.
 
-        //Timer (keeping track of event listeners that happen over a period of time)
-        if (evt.getSource() == timer) {
-            this.repaint();
-        }
-
         //For player 1 (Host):
-        if (evt.getSource() == chooseScorpionButton && !hostReady && userType == "Host") {
-            hostReady = true;
-            hostChoice = "Scorpion";
-            chooseScorpionPressed = true;
-            System.out.println(userType+" chose Scorpion");
-        } else if (evt.getSource() == chooseSubZeroButton && !hostReady && userType == "Host") {
-            hostReady = true;
-            hostChoice = "Sub Zero";
-            chooseScorpionPressed = true;
-            System.out.println(userType+" chose Scorpion");
-        }
-
-        //For player 2 (Client):
-        if (evt.getSource() == chooseScorpionButton && !clientReady && userType == "Client") {
-            clientReady = true;
-            clientChoice = "Scorpion";
-            chooseSubZeroPressed = true;
-            System.out.println(userType+" chose Sub");
-        } else if (evt.getSource() == chooseSubZeroButton && !clientReady && userType == "Client") {
-            clientReady = true;
-            clientChoice = "Sub Zero";
-            chooseSubZeroPressed = true;
-            System.out.println(userType+" chose Sub");
+        if (evt.getSource() == chooseScorpionButton) {
+            if (!hostReady && state.currentPlayer == state.player1) {
+                hostReady = true;
+                hostChoice = "Host,"+state.player1.name+",Scorpion";
+                System.out.println(state.player1.name +" chose Scorpion");
+                state.player1.chooseFighter("Scorpion");
+                state.ssm.sendText(hostChoice);
+            } else if (!clientReady && state.currentPlayer == state.player2) {
+                clientReady = true;
+                clientChoice = "Client,"+state.player2.name +",Scorpion";
+                System.out.println(state.player2.name +" chose Scorpion");
+                state.player2.chooseFighter("Scorpion");
+                state.ssm.sendText(clientChoice);         
+            }
+        } else if (evt.getSource() == chooseSubZeroButton) {
+            if (!hostReady && state.currentPlayer == state.player1) {
+                hostReady = true;
+                hostChoice = "Host,"+state.player1.name+",Subzero";
+                System.out.println(state.player1.name +" chose Subzero");
+                state.player1.chooseFighter("Subzero");
+                state.ssm.sendText(hostChoice);
+            } else if (!clientReady && state.currentPlayer == state.player2) {
+                clientReady = true;
+                clientChoice = "Client,"+state.player2.name+",Subzero";
+                System.out.println(state.player2.name +" chose Sub");
+                state.player2.chooseFighter("Subzero");
+                state.ssm.sendText(clientChoice);
+            }
         }
     }
  
  
      //Constructor
-     public CharacterSelectionView() {
+     public CharacterSelectionView(GameState state) {
         super();
+
+        this.state = state;
         this.setLayout(null);
         this.setPreferredSize(new Dimension(1280, 720));
-
 
         //Loading the images:
         //Try to read the image from both the jar file and local drive

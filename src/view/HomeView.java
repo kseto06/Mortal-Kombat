@@ -26,17 +26,16 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
+import model.GameState;
+import model.Player;
 import network.MulticastClient;
 import network.MulticastServer;
 import network.SuperSocketMaster;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class HomeView extends JPanel implements ActionListener {
     //Properties
-    CharacterSelectionView characterSelectionView = new CharacterSelectionView();
     JLabel title = new JLabel("MORTAL KOMBAT");
     JTextField usernameField;
     JTable serverListTable;
@@ -49,15 +48,21 @@ public class HomeView extends JPanel implements ActionListener {
     public JButton helpButton = new JButton("Help");
     BufferedImage imgBackground;
 
+    GameState state;
+
     //Server Properties:
     MulticastServer ms;
     MulticastClient mc;
-    SuperSocketMaster ssm;
-    String ipAddress;
+    public String ipAddress;
 
-    String hostPlayerName, clientPlayerName;
     Timer timer = new Timer(1500, this);
     ArrayList<String> serverList = new ArrayList<String>();
+
+    //CardLayout cardLayout = new CardLayout();
+    //JPanel cardContainer = new JPanel(cardLayout); 
+    //Creating a new JPanel cardContainer allows showing new JPanel in dynamically added button (might change to boolean)
+    public static boolean joinButtonPressed = false;
+    public static boolean hostButtonPressed = false;
 
     //Methods
     @Override
@@ -70,11 +75,10 @@ public class HomeView extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-        //Loop sending messages
+        //Loop sending messages 
         if (evt.getSource() == timer) {
             try {
-                ipAddress = ssm.getMyAddress();
-                String sendText = hostPlayerName+","+ipAddress+","+"4019";
+                String sendText = state.player1.name+","+ipAddress+","+"4019";
                 ms.sendText(sendText);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -83,25 +87,29 @@ public class HomeView extends JPanel implements ActionListener {
 
         //Receiving messages
         if (evt.getSource() == mc) {      
-            System.out.println(mc.readText()); 
+            //System.out.println(mc.readText()); 
             //Keep trying to update the server lists:
             this.addServer(mc.readText());
+
         }
 
         if (evt.getSource() == hostButton) {
             //One person has joined -- manipulate the characterSelectionView to have a "waiting for opponent" -- TO-DO
             ms = new MulticastServer("236.169.184.1", 15775);
-            characterSelectionView.userType = "Host";
-            hostPlayerName = usernameField.getText();
+            state.player1 = new Player(usernameField.getText());
+            state.currentPlayer = state.player1;
             
             //Start timer to start connection
             timer.start();
 
-        } else if (evt.getSource() == helpButton) { //TO-DO: MC stuff here needs to be tied to a button
-            //Two people now in-game, show the Character Selection Screen 
-            characterSelectionView.userType = "Client";
-            clientPlayerName = usernameField.getText();
-        
+            //Host SSM:
+            state.ssm = new SuperSocketMaster(4019, state.listener);
+            state.ssm.connect();
+            state.ipAddress = ipAddress;
+
+            MainView.cardLayout.show(MainView.panel, "characterSelectionView");
+            hostButtonPressed = true;
+
         } else if (evt.getSource() == helpButton) {
             //TO-DO: Interactive HelpScreen
         
@@ -128,8 +136,10 @@ public class HomeView extends JPanel implements ActionListener {
         buttonList = new JButton[serverList.size()];
 
         for (int i = 0; i < serverList.size(); i++) {
+            String currentMsg = serverList.get(i);
+
             //Add a label:
-            labelList[i] = new JLabel(serverList.get(i));
+            labelList[i] = new JLabel(currentMsg);
             labelList[i].setFont(new Font("Cambria", Font.PLAIN, 24));
             labelList[i].setForeground(Color.WHITE);
             labelList[i].setSize(300, 60);
@@ -143,19 +153,34 @@ public class HomeView extends JPanel implements ActionListener {
             buttonList[i].setLocation(1280/10+710, 430 + i*65);
             this.add(buttonList[i]);
 
+            buttonList[i].addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    //Two people now in-game, show the Character Selection Screen 
+                    state.player2 = new Player(usernameField.getText());
+                    state.currentPlayer = state.player2;
+                    //Client SSM:
+                    state.ipAddress = currentMsg.split(",")[1];
+                    state.ssm = new SuperSocketMaster(state.ipAddress, 4019, state.listener); 
+                    state.ssm.connect();
+                    
+                    MainView.cardLayout.show(MainView.panel, "characterSelectionView");
+                }
+            });
+
             this.repaint();
         }
     }
 
     //Constructor
-    public HomeView() {
+    public HomeView(GameState state) {
         super();
+        this.state = state;
         this.setLayout(null);
         this.setPreferredSize(new Dimension(1280, 720));
         mc = new MulticastClient("236.169.184.1", 15775, this); //Automatically assume client and connect
         mc.connect();
 
-        ssm = new SuperSocketMaster(4019, this);
+        ipAddress = SuperSocketMaster.getMyAddress();
 
         //Loading the image:
         //Try to read the image from both the jar file and local drive
@@ -225,14 +250,6 @@ public class HomeView extends JPanel implements ActionListener {
         //Add action listeners to necessary JComponents:
         hostButton.addActionListener(this);
         helpButton.addActionListener(this);
-
-
-        //Table formatting (of server lists):
-        /*
-         * Need to get server data
-         * Initialize column names. One side is server host name, the other is button to join server
-         * 
-         */
     }
 
 }

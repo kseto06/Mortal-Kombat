@@ -82,7 +82,7 @@ public class SuperSocketMaster{
    * 
    * @return Returns computer's IP address
    */
-  public String getMyAddress(){
+  public static String getMyAddress(){
     try {
       Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
       while (networkInterfaces.hasMoreElements()) {

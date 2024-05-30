@@ -3,6 +3,7 @@ package model;
 public class Fighter {
     // Properties
     public int HP = 1000;
+    public String name;
     
     // Methods
     public void punch(Fighter opponent) {
@@ -24,7 +25,7 @@ public class Fighter {
     public void takeDamage(int damage) {
         // TO-DO: Implement takeDamage method
     }
-
+    
     // Constructor
     public Fighter() {
         // TO-DO: Implement constructor
