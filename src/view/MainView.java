@@ -17,65 +17,28 @@ import javax.swing.Timer;
 
 import model.GameState;
 
-public class MainView implements ActionListener, KeyListener {
+public class MainView {
     //Properties
-    JFrame frame = new JFrame("View Testing");
+    public static JFrame frame = new JFrame("View Testing");
     public static CardLayout cardLayout = new CardLayout();
     GameState state;
     public static JPanel panel = new JPanel();
     HomeView homeView;
     CharacterSelectionView characterSelectionView;
-
-    Timer timer = new Timer(1000/60, this);
-
-    //Methods
-    @Override
-    public void actionPerformed(ActionEvent evt) {
-        if (evt.getSource() == timer) {
-            panel.repaint();
-        }
-
-        if (characterSelectionView.hostReady == true && characterSelectionView.clientReady == true) {
-            //Two people done selecting, start game
-
-        } 
-    }
-    
-    @Override
-    public void keyTyped(KeyEvent e) {
-        
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        
-    }
-
-    // @Override
-    // /**
-    //  * Draws the components of the panel, with animations.
-    //  * @param g The graphics object used to draw the components
-    //  */
-    // public void paintComponent(Graphics g) {
-    //     super.paintComponent(g);
-    //     Graphics2D g2d = (Graphics2D) g;
-    // }
+    GameView gameView;
 
     //Constructor (Testing):
     public MainView(GameState state) {
         this.state = state;
         homeView = new HomeView(this.state);
         characterSelectionView = new CharacterSelectionView(this.state);
+        gameView = new GameView(this.state);
         //Default settings. Using cardLayout to be able to switch between different screens throughout the game
         panel.setPreferredSize(new Dimension(1280, 720));
         panel.setLayout(cardLayout);
         panel.add(homeView, "homeScreen");
         panel.add(characterSelectionView, "characterSelectionView");
+        //panel.add(gameView, "gameView");
         cardLayout.show(panel, "homeScreen");
 
         //Default settings
@@ -84,7 +47,5 @@ public class MainView implements ActionListener, KeyListener {
         frame.pack();
         frame.setResizable(false);
         frame.setVisible(true);
-
-        timer.start();
     }
 }
