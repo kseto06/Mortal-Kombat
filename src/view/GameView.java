@@ -3,16 +3,23 @@ package view;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
 import model.GameState;
@@ -20,8 +27,9 @@ import model.GameState;
 public class GameView extends JPanel implements ActionListener {
     //Properties
     GameState state;
-    //private boolean isJumpPressed = false; //Prevents players from infinitely spamming/holding down jump key
-    private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
+    JLabel player1NameLabel = new JLabel(), player2NameLabel = new JLabel();
+    JLabel player1HPCount = new JLabel(), player2HPCount = new JLabel();
+    private final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 
     //Init images
     /**
@@ -39,43 +47,95 @@ public class GameView extends JPanel implements ActionListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.BLACK);
-        g2d.setStroke(new BasicStroke(4.0f));
-        g2d.drawLine(0, 680, 1280, 680); //The ground
-        
+        g.drawImage(imgBackground, 0, 0, null);
 
-        //Idle / ONLY Moving animations
-            //Images stored in the fighter subclasses\
-            //TODO: draw images for punching or wtv -- give more specific actions lower priority (checked last) on condition checking        
-        if (state.player1.currentX <= state.player2.currentX) {
-            g.drawImage(state.player1.fighter.idleLeft, state.player1.currentX, state.player1.currentY, this); //Player 1
-            g.drawImage(state.player2.fighter.idleRight, state.player2.currentX, state.player2.currentY, this);
-        } else {
-            g.drawImage(state.player1.fighter.idleRight, state.player1.currentX, state.player1.currentY, this);
-            g.drawImage(state.player2.fighter.idleLeft, state.player2.currentX, state.player2.currentY, this);
+        // g2d.setColor(Color.BLACK);
+        // g2d.setStroke(new BasicStroke(4.0f));
+        // g2d.drawLine(0, 680, 1280, 680); //The ground
+
+        //Health bars and Player name labels
+        g2d.setColor(Color.RED);
+        g2d.setStroke(new BasicStroke(2.5f));
+        g2d.drawRect(20, 10, 500, 50); //each point of health = 0.5px
+        g2d.drawRect(760, 10, 500, 50);
+        g2d.fillRect(20, 10, (int)(state.player1.fighter.HP * 0.5), 50);
+        g2d.fillRect(760, 10, (int)(state.player2.fighter.HP * 0.5), 50);
+        player1NameLabel.setText(state.player1.name);
+        player2NameLabel.setText(state.player2.name);
+        player1HPCount.setText(String.valueOf(state.player1.fighter.HP) + "/1000");
+        player2HPCount.setText(String.valueOf(state.player2.fighter.HP) + "/1000");
+
+
+        //Animation updates and settings
+        //Images stored in the fighter subclasses
+        if (!state.player1.isAttacking && (state.player1.currentX <= state.player2.currentX)) {
+            state.player1.currentAnimationImg = state.player1.fighter.idleLeft;
+        } else if (!state.player1.isAttacking && (state.player1.currentX > state.player2.currentX)) {
+            state.player1.currentAnimationImg = state.player1.fighter.idleRight;
+        }
+        
+        if (!state.player2.isAttacking && (state.player1.currentX <= state.player2.currentX)) {
+            state.player2.currentAnimationImg = state.player2.fighter.idleRight;
+        } else if (!state.player2.isAttacking && (state.player1.currentX > state.player2.currentX)) {
+            state.player2.currentAnimationImg = state.player2.fighter.idleLeft;
         }
 
-        if (state.player1.currentAnimationImg == state.player1.fighter.punchLeft) {
-            g.drawImage(state.player1.fighter.punchLeft, state.player1.currentX, state.player1.currentY, this);
-            //Pause program for a bit of time? Does this work? Ask Martin
+        //Punching, update for other player to see
+        if (state.currentPlayer.equals(state.player2) && state.player1.isAttacking && state.player1.currentAction.equals("punch")) {
+            if (state.player1.currentX <= state.player2.currentX) {
+                state.player1.currentAnimationImg = state.player1.fighter.punchLeft;
+            } else if (state.player1.currentX > state.player2.currentX) {
+                state.player1.currentAnimationImg = state.player1.fighter.punchRight;
+            }
         }
 
-        if (state.player2.currentAnimationImg == state.player2.fighter.punchLeft) {
-            g.drawImage(state.player2.fighter.punchLeft, state.player2.currentX, state.player2.currentY, this);
+        if (state.currentPlayer.equals(state.player1) && state.player2.isAttacking && state.player2.currentAction.equals("punch")) {
+            if (state.player1.currentX <= state.player2.currentX) {
+                state.player2.currentAnimationImg = state.player2.fighter.punchRight;
+            } else if (state.player1.currentX > state.player2.currentX) {
+                state.player2.currentAnimationImg = state.player2.fighter.punchLeft;
+            }
         }
-        
-        // if (state.player1.fighter.name.equals("Scorpion") && state.player1.isAttacking) {
 
-        // }
-        
-        // if (state.player1.fighter.name.equals("Scorpion")) {
-        //     if (state.player1.currentX <= state.player2.currentX) { //player1 is on the left
-        //         g.drawImage(scorpionIdleLeft, state.player1.currentX, state.player1.currentY, this);
-        //     } else {
-        //         g.drawImage(scorpionIdleRight, state.player2.currentX, state.player2.currentY, this);
-        //     }
-            
-        // } 
+        //Kicking
+        if (state.currentPlayer.equals(state.player2) && state.player1.isAttacking && state.player1.currentAction.equals("kick")) {
+            if (state.player1.currentX <= state.player2.currentX) {
+                state.player1.currentAnimationImg = state.player1.fighter.kickLeft;
+            } else if (state.player1.currentX > state.player2.currentX) {
+                state.player1.currentAnimationImg = state.player1.fighter.kickRight;
+            }
+        }
+
+        if (state.currentPlayer.equals(state.player1) && state.player2.isAttacking && state.player2.currentAction.equals("kick")) {
+            if (state.player1.currentX <= state.player2.currentX) {
+                state.player2.currentAnimationImg = state.player2.fighter.kickRight;
+            } else if (state.player1.currentX > state.player2.currentX) {
+                state.player2.currentAnimationImg = state.player2.fighter.kickLeft;
+            }
+        }
+
+        //Uppercuts
+        if (state.currentPlayer.equals(state.player2) && state.player1.isAttacking && state.player1.currentAction.equals("uppercut")) {
+            if (state.player1.currentX <= state.player2.currentX) {
+                state.player1.currentAnimationImg = state.player1.fighter.uppercutLeft;
+            } else if (state.player1.currentX > state.player2.currentX) {
+                state.player1.currentAnimationImg = state.player1.fighter.uppercutRight;
+            }
+        }
+
+        if (state.currentPlayer.equals(state.player1) && state.player2.isAttacking && state.player2.currentAction.equals("uppercut")) {
+            if (state.player1.currentX <= state.player2.currentX) {
+                state.player2.currentAnimationImg = state.player2.fighter.uppercutRight;
+            } else if (state.player1.currentX > state.player2.currentX) {
+                state.player2.currentAnimationImg = state.player2.fighter.uppercutLeft;
+            }
+        }
+
+        //TODO: Special Moves Animations
+
+        //Update movement (we'll see if this needs to be moved all the way to the top)
+        g.drawImage(state.player1.currentAnimationImg, state.player1.currentX, state.player1.currentY, this); //Player 1 (Host)
+        g.drawImage(state.player2.currentAnimationImg, state.player2.currentX, state.player2.currentY, this); // Client
     }
 
     @Override
@@ -114,24 +174,27 @@ public class GameView extends JPanel implements ActionListener {
 
     //Animation functionalities:
     private void jumpTimer() {
-        Timer jumpTimer = new Timer(500, new ActionListener() {
+        Timer jumpTimer = new Timer(500, new ActionListener() { //Dynamic timer puts a delay and then performs an action afterwards
             @Override
             public void actionPerformed(ActionEvent e) {
                 state.currentPlayer.currentY += 180;
-                state.ssm.sendText((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY);
+                state.ssm.sendText((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",finished jump");
             }
         });
         jumpTimer.setRepeats(false);
         jumpTimer.start();
     }
 
-    private void attackTimer(String attack) {
+    private void attackTimer() {
         Timer attackTimer = new Timer(250, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                state.currentPlayer.isAttacking = false;
+                state.ssm.sendText((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",finished attack");
             }
         });
+        attackTimer.setRepeats(false);
+        attackTimer.start();
     }
 
     private void animateScorpionSpear(Graphics g, int x, int y) {
@@ -151,6 +214,55 @@ public class GameView extends JPanel implements ActionListener {
         this.setLayout(null);
         this.setPreferredSize(new Dimension(1280, 720));
 
+        //JLabels
+        player1NameLabel.setFont(new Font("Cambria", Font.PLAIN, 20));
+        player1NameLabel.setForeground(Color.BLACK);
+        player1NameLabel.setSize(50, 30);
+        player1NameLabel.setLocation(40, 20);
+        player1NameLabel.setVerticalAlignment(SwingConstants.CENTER);
+        this.add(player1NameLabel);
+
+        player2NameLabel.setFont(new Font("Cambria", Font.PLAIN, 20));
+        player2NameLabel.setForeground(Color.BLACK);
+        player2NameLabel.setSize(50, 30);
+        player2NameLabel.setLocation(1150, 20);
+        player2NameLabel.setVerticalAlignment(SwingConstants.CENTER);
+        this.add(player2NameLabel);
+
+        player1HPCount.setFont(new Font("Cambria", Font.PLAIN, 18));
+        player1HPCount.setForeground(Color.GREEN);
+        player1HPCount.setSize(100, 30);
+        player1HPCount.setLocation(760 + 10, 21);
+        player1HPCount.setVerticalAlignment(SwingConstants.CENTER);
+        this.add(player1HPCount);
+
+        player2HPCount.setFont(new Font("Cambria", Font.PLAIN, 18));
+        player2HPCount.setForeground(Color.GREEN);
+        player2HPCount.setSize(100, 30);
+        player2HPCount.setLocation(420, 21);
+        player2HPCount.setVerticalAlignment(SwingConstants.CENTER);
+        this.add(player2HPCount);
+
+        //Loading the fight background:
+        //Try to read the image from both the jar file and local drive
+        InputStream backgroundClass = this.getClass().getResourceAsStream("src/assets/FightBackground.jpg");
+    
+        if (backgroundClass != null) {
+            try {
+                imgBackground = ImageIO.read(backgroundClass);
+            } catch (IOException e) {
+                System.out.println("Unable to read/load image from jar");
+                e.printStackTrace();
+            }
+        } else { //If it can't be found on the jar, search it locally
+            try {
+                imgBackground = ImageIO.read(new File("src/assets/FightBackground.jpg"));
+            } catch (IOException e) {
+                System.out.println("Unable to read/load image");
+                e.printStackTrace();
+            }
+        }
+
         //Start the timer:
         timer.start();
 
@@ -160,9 +272,11 @@ public class GameView extends JPanel implements ActionListener {
         this.getActionMap().put("right", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                state.currentPlayer.currentX += 10;
-                System.out.println((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY);
-                state.ssm.sendText((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY);
+                if (!state.currentPlayer.movementDisabled) {
+                    state.currentPlayer.currentX += 10;
+                    System.out.println((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",moved right");
+                    state.ssm.sendText((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",moved right");
+                }
             }
         });
 
@@ -170,9 +284,11 @@ public class GameView extends JPanel implements ActionListener {
         this.getActionMap().put("left", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                state.currentPlayer.currentX -= 10;
-                System.out.println((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY);
-                state.ssm.sendText((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY);
+                if (!state.currentPlayer.movementDisabled) {
+                    state.currentPlayer.currentX -= 10;
+                    System.out.println((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",moved left");
+                    state.ssm.sendText((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",moved left");
+                }
             }
         });
 
@@ -180,33 +296,75 @@ public class GameView extends JPanel implements ActionListener {
         this.getActionMap().put("jump", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) { 
-                state.currentPlayer.currentY -= 180;
-                state.ssm.sendText((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY);
-                jumpTimer();
+                if (!state.currentPlayer.movementDisabled) {
+                    state.currentPlayer.currentY -= 180;
+                    state.ssm.sendText((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",jump");
+                    jumpTimer();
+                }
             }
         });
 
-        this.getInputMap(IFW).put(KeyStroke.getKeyStroke("W"), "jump"); //Jumping
-        this.getActionMap().put("jump", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) { 
-                state.currentPlayer.currentY -= 180;
-                state.ssm.sendText((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY);
-                jumpTimer();
-            }
-        });
-
-        this.getInputMap(IFW).put(KeyStroke.getKeyStroke("J"), "punch"); //Jumping
+        this.getInputMap(IFW).put(KeyStroke.getKeyStroke("J"), "punch"); //Punching
         this.getActionMap().put("punch", new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { 
-                state.currentPlayer.isAttacking = true;
-                if (state.currentPlayer.equals(state.player1)) {
-                    state.ssm.sendText("host,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY);
-                } else {
-                    state.ssm.sendText("client,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY);
+            public void actionPerformed(ActionEvent e) {                 
+                if (state.currentPlayer.equals(state.player1) && !state.player1.movementDisabled) {
+                    state.currentPlayer.punch(state.player2);
+                    state.ssm.sendText("host,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",punch");
+                    attackTimer();
+                } else if (state.currentPlayer.equals(state.player2) && !state.player2.movementDisabled) {
+                    state.currentPlayer.punch(state.player1);
+                    state.ssm.sendText("client,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",punch");
+                    attackTimer();
                 }
-                
+            }
+        });
+
+        this.getInputMap(IFW).put(KeyStroke.getKeyStroke("L"), "kick"); //Kicking
+        this.getActionMap().put("kick", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {                 
+                if (state.currentPlayer.equals(state.player1) && !state.player1.movementDisabled) {
+                    state.currentPlayer.kick(state.player2);
+                    state.ssm.sendText("host,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",kick");
+                    attackTimer();
+                } else if (state.currentPlayer.equals(state.player2) && !state.player2.movementDisabled) {
+                    state.currentPlayer.kick(state.player1);
+                    state.ssm.sendText("client,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",kick");
+                    attackTimer();
+                }
+            }
+        });
+
+        this.getInputMap(IFW).put(KeyStroke.getKeyStroke("K"), "uppercut"); //Uppercut
+        this.getActionMap().put("uppercut", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {                 
+                if (state.currentPlayer.equals(state.player1) && !state.player1.movementDisabled) {
+                    state.currentPlayer.uppercut(state.player2);
+                    state.ssm.sendText("host,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",uppercut");
+                    attackTimer();
+                } else if (state.currentPlayer.equals(state.player2) && !state.player2.movementDisabled) {
+                    state.currentPlayer.uppercut(state.player1);
+                    state.ssm.sendText("client,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",uppercut");
+                    attackTimer();
+                }
+            }
+        });
+
+        this.getInputMap(IFW).put(KeyStroke.getKeyStroke("I"), "special"); //Special Move
+        this.getActionMap().put("special", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {                 
+                if (state.currentPlayer.equals(state.player1) && !state.player1.movementDisabled) {
+                    state.currentPlayer.specialMove(state.player2);
+                    state.ssm.sendText("host,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",special");
+                    attackTimer();
+                } else if (state.currentPlayer.equals(state.player2) && !state.player2.movementDisabled) {
+                    state.currentPlayer.punch(state.player1);
+                    state.ssm.sendText("client,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",special");
+                    attackTimer();
+                }
             }
         });
 

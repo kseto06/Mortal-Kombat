@@ -32,10 +32,10 @@ public class ScorpionFighter extends Fighter {
         InputStream punchRightClass = this.getClass().getResourceAsStream("src/assets/scorpionPunchRight.png");
         InputStream kickLeftClass = this.getClass().getResourceAsStream("src/assets/scorpionKickLeft.png");
         InputStream kickRightClass = this.getClass().getResourceAsStream("src/assets/scorpionKickRight.png");
-        InputStream uppercutLeftClass = this.getClass().getResourceAsStream("src/assets/scorpionuppercutLeft.png");
-        InputStream uppercutRightClass = this.getClass().getResourceAsStream("src/assets/scorpionuppercutRight.png");
-        InputStream specialLeftClass = this.getClass().getResourceAsStream("src/assets/scorpionspecialLeft.png");
-        InputStream specialRightClass = this.getClass().getResourceAsStream("src/assets/scorpionspecialRight.png");
+        InputStream uppercutLeftClass = this.getClass().getResourceAsStream("src/assets/scorpionUppercutLeft.png");
+        InputStream uppercutRightClass = this.getClass().getResourceAsStream("src/assets/scorpionUppercutRight.png");
+        InputStream specialLeftClass = this.getClass().getResourceAsStream("src/assets/scorpionSpecialLeft.png");
+        InputStream specialRightClass = this.getClass().getResourceAsStream("src/assets/scorpionSpecialRight.png");
 
         if (punchLeftClass != null && punchRightClass != null && kickLeftClass != null && kickRightClass != null && uppercutLeftClass != null && uppercutRightClass != null && specialLeftClass != null && specialRightClass != null) {
             try {
@@ -59,12 +59,12 @@ public class ScorpionFighter extends Fighter {
                 idleRight = ImageIO.read(new File("src/assets/scorpionIdleRight.png"));
                 punchLeft = ImageIO.read(new File("src/assets/scorpionPunchLeft.png"));
                 punchRight = ImageIO.read(new File("src/assets/scorpionPunchRight.png"));
-                kickLeft = ImageIO.read(new File("src/assets/scorpionkickLeft.png"));
-                kickRight = ImageIO.read(new File("src/assets/scorpionkickRight.png"));
-                uppercutLeft = ImageIO.read(new File("src/assets/scorpionuppercutLeft.png"));
-                uppercutRight = ImageIO.read(new File("src/assets/scorpionuppercutRight.png"));
-                specialLeft = ImageIO.read(new File("src/assets/scorpionspecialLeft.png"));
-                specialRight = ImageIO.read(new File("src/assets/scorpionspecialRight.png"));
+                kickLeft = ImageIO.read(new File("src/assets/scorpionKickLeft.png"));
+                kickRight = ImageIO.read(new File("src/assets/scorpionKickRight.png"));
+                uppercutLeft = ImageIO.read(new File("src/assets/scorpionUppercutLeft.png"));
+                uppercutRight = ImageIO.read(new File("src/assets/scorpionUppercutRight.png"));
+                specialLeft = ImageIO.read(new File("src/assets/scorpionSpecialLeft.png"));
+                specialRight = ImageIO.read(new File("src/assets/scorpionSpecialRight.png"));
 
             } catch (IOException e) {
                 System.out.println("Unable to read/load image");

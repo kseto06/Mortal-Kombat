@@ -11,6 +11,7 @@ public class Player {
     public boolean isAttacking = false;
     public int currentX, currentY;
     public BufferedImage currentAnimationImg;
+    public String currentAction;
     
     // Methods
     public void chooseFighter(String fighterName) {

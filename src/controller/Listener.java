@@ -32,12 +32,38 @@ public class Listener implements ActionListener {
             //Game View Socket
             //Message Format: userType, currentX, currentY
             if (msgComponents[0].equals("host") && state.player1 != null) {
-                state.player1.currentX = Integer.valueOf(msgComponents[1]);
-                state.player1.currentY = Integer.valueOf(msgComponents[2]);
+                try {
+                    state.player1.currentX = Integer.valueOf(msgComponents[1]);
+                    state.player1.currentY = Integer.valueOf(msgComponents[2]);
+
+                    //Attacking
+                    if (msgComponents[3] != null && msgComponents[3] != "") {
+                    state.player1.isAttacking = msgComponents[3].equals("true");
+                    }
+                    //Check the specific action
+                    if (msgComponents[4] != "" && msgComponents[4] != null) {
+                        state.player1.currentAction = msgComponents[4];
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                }
 
             } else if (msgComponents[0].equals("client") && state.player2 != null) {
-                state.player2.currentX = Integer.valueOf(msgComponents[1]);
-                state.player2.currentY = Integer.valueOf(msgComponents[2]);
+                try {
+                    state.player2.currentX = Integer.valueOf(msgComponents[1]);
+                    state.player2.currentY = Integer.valueOf(msgComponents[2]);
+
+                    //Attacking
+                    if (msgComponents[3] != null && msgComponents[3] != "") {
+                        state.player2.isAttacking = msgComponents[3].equals("true");
+                    }
+                    //Check the specific action
+                    if (msgComponents[4] != "" && msgComponents[4] != null) {
+                        state.player2.currentAction = msgComponents[4];
+                    }         
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                }       
                 
             }
         }

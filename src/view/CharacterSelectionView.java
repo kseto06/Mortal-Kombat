@@ -18,8 +18,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -111,6 +109,10 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
             state.player2.currentX = 1280 - 400;
             state.player2.currentY = 680 - this.state.player2.fighter.HEIGHT;
 
+            state.player1.currentAnimationImg = state.player1.fighter.idleLeft;
+            state.player2.currentAnimationImg = state.player2.fighter.idleRight;
+
+            //Show game panel
             gameView = new GameView(state);
             MainView.panel.add(gameView, "gameView");
             MainView.cardLayout.show(MainView.panel, "gameView");
