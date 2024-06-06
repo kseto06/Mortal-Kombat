@@ -112,6 +112,9 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
             state.player1.currentAnimationImg = state.player1.fighter.idleLeft;
             state.player2.currentAnimationImg = state.player2.fighter.idleRight;
 
+            state.player1.currentAction = "idle";
+            state.player2.currentAction = "idle";
+
             //Show game panel
             gameView = new GameView(state);
             MainView.panel.add(gameView, "gameView");

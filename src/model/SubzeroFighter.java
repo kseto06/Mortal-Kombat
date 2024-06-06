@@ -10,13 +10,13 @@ public class SubzeroFighter extends Fighter {
     // Properties
     private long specialLastUsed = 0; // TODO: set to value
     public String name = "Subzero";
+    
 
     // Methods
     public void specialMove(Fighter opponent) {
         // TO-DO: Implement attack method
     }
 
-        //TODO: InputStream shit
     public SubzeroFighter() {
         super();
 
@@ -33,10 +33,13 @@ public class SubzeroFighter extends Fighter {
         InputStream kickRightClass = this.getClass().getResourceAsStream("src/assets/subzeroKickRight.png");
         InputStream uppercutLeftClass = this.getClass().getResourceAsStream("src/assets/subzeroUppercutLeft.png");
         InputStream uppercutRightClass = this.getClass().getResourceAsStream("src/assets/subzeroUppercutRight.png");
+        InputStream staggerLeftClass = this.getClass().getResourceAsStream("src/assets/subzeroStaggerLeft.png");
+        InputStream staggerRightClass = this.getClass().getResourceAsStream("src/assets/subzeroStaggerRight.png");
         InputStream specialLeftClass = this.getClass().getResourceAsStream("src/assets/subzeroSpecialLeft.png");
-        InputStream specialRightClass = this.getClass().getResourceAsStream("src/assets/subzeroSpecialRight.png");
+        InputStream specialRightClass = this.getClass().getResourceAsStream("src/assets/subzeroSpecialRight.png");  
+           
 
-        if (punchLeftClass != null && punchRightClass != null && kickLeftClass != null && kickRightClass != null && uppercutLeftClass != null && uppercutRightClass != null && specialLeftClass != null && specialRightClass != null) {
+        if (punchLeftClass != null && punchRightClass != null && kickLeftClass != null && kickRightClass != null && uppercutLeftClass != null && uppercutRightClass != null && specialLeftClass != null && specialRightClass != null && staggerLeftClass != null && staggerRightClass != null) {
             try {
                 idleLeft = ImageIO.read(idleLeftClass);
                 idleRight = ImageIO.read(idleRightClass);
@@ -46,8 +49,12 @@ public class SubzeroFighter extends Fighter {
                 kickRight = ImageIO.read(kickRightClass);
                 uppercutLeft = ImageIO.read(uppercutLeftClass);
                 uppercutRight = ImageIO.read(uppercutRightClass);
+                staggerLeft = ImageIO.read(staggerLeftClass);
+                staggerRight = ImageIO.read(staggerRightClass);
+                
                 specialLeft = ImageIO.read(specialLeftClass);
-                specialRight = ImageIO.read(specialRightClass);
+                specialRight = ImageIO.read(specialRightClass);                
+
             } catch (IOException e) {
                 System.out.println("Unable to read/load image from jar");
                 e.printStackTrace();
@@ -62,9 +69,11 @@ public class SubzeroFighter extends Fighter {
                 kickRight = ImageIO.read(new File("src/assets/subzeroKickRight.png"));
                 uppercutLeft = ImageIO.read(new File("src/assets/subzeroUppercutLeft.png"));
                 uppercutRight = ImageIO.read(new File("src/assets/subzeroUppercutRight.png"));
+                staggerLeft = ImageIO.read(new File("src/assets/subzeroStaggerLeft.png"));
+                staggerRight = ImageIO.read(new File("src/assets/subzeroStaggerRight.png"));
                 specialLeft = ImageIO.read(new File("src/assets/subzeroSpecialLeft.png"));
                 specialRight = ImageIO.read(new File("src/assets/subzeroSpecialRight.png"));
-
+                
             } catch (IOException e) {
                 System.out.println("Unable to read/load image");
                 e.printStackTrace();

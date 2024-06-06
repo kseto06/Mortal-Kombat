@@ -31,22 +31,32 @@ public class Listener implements ActionListener {
 
             //Game View Socket
             //Message Format: userType, currentX, currentY
-            if (msgComponents[0].equals("host") && state.player1 != null) {
+            else if (msgComponents[0].equals("host") && state.player1 != null) {
                 try {
                     state.player1.currentX = Integer.valueOf(msgComponents[1]);
                     state.player1.currentY = Integer.valueOf(msgComponents[2]);
 
                     //Attacking
-                    if (msgComponents[3] != null && msgComponents[3] != "") {
+                    if (msgComponents[3] != null && !msgComponents[3].isEmpty()) {
                     state.player1.isAttacking = msgComponents[3].equals("true");
                     }
                     //Check the specific action
-                    if (msgComponents[4] != "" && msgComponents[4] != null) {
+                    if (msgComponents[4] != null && !msgComponents[4].isEmpty()) {
                         state.player1.currentAction = msgComponents[4];
+                    }
+                    //Movement Disabled Check
+                    if (msgComponents[5] != null && !msgComponents[5].isEmpty()) {
+                        state.player1.movementDisabled = msgComponents[5].equals("true");
+                    }
+                    //Stagger Has Run Check
+                    if (msgComponents[6] != null && !msgComponents[6].isEmpty()) {
+                        state.player1.hasRun = msgComponents[6].equals("true");
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }
+
+                
 
             } else if (msgComponents[0].equals("client") && state.player2 != null) {
                 try {
@@ -54,14 +64,22 @@ public class Listener implements ActionListener {
                     state.player2.currentY = Integer.valueOf(msgComponents[2]);
 
                     //Attacking
-                    if (msgComponents[3] != null && msgComponents[3] != "") {
+                    if (msgComponents[3] != null && !msgComponents[3].isEmpty()) {
                         state.player2.isAttacking = msgComponents[3].equals("true");
                     }
                     //Check the specific action
-                    if (msgComponents[4] != "" && msgComponents[4] != null) {
+                    if (msgComponents[4] != null && !msgComponents[4].isEmpty()) {
                         state.player2.currentAction = msgComponents[4];
                     }         
-                } catch (ArrayIndexOutOfBoundsException e) {
+                    //Movement Disabled Check
+                    if (msgComponents[5] != null && !msgComponents[5].isEmpty()) {
+                        state.player2.movementDisabled = msgComponents[5].equals("true");
+                    }
+                    //Stagger Has Run Check
+                    if (msgComponents[6] != null && !msgComponents[6].isEmpty()) {
+                        state.player2.hasRun = msgComponents[6].equals("true");
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
                 }       
                 

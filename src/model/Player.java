@@ -9,6 +9,7 @@ public class Player {
     public boolean movementDisabled = false;
     public boolean isKeyPressed = false;
     public boolean isAttacking = false;
+    public boolean hasRun = false; //check if stagger has run
     public int currentX, currentY;
     public BufferedImage currentAnimationImg;
     public String currentAction;
