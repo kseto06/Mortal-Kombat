@@ -25,12 +25,12 @@ import javax.swing.Timer;
 import controller.Hitbox;
 import model.GameState;
 import model.IceBall;
+import model.Player;
 
 public class GameView extends JPanel implements ActionListener {
     //Properties
     GameState state;
     Hitbox hitbox;
-    IceBall iceBall1, iceBall2;
     JLabel player1NameLabel = new JLabel(), player2NameLabel = new JLabel();
     JLabel player1HPCount = new JLabel(), player2HPCount = new JLabel();
     private final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
@@ -53,6 +53,7 @@ public class GameView extends JPanel implements ActionListener {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g.drawImage(imgBackground, 0, 0, null);
+        // System.out.println("Special being used? "+state.player2.fighter.isSpecialBeingUsed); 
 
         // g2d.setColor(Color.BLACK);
         // g2d.setStroke(new BasicStroke(4.0f));
@@ -70,22 +71,21 @@ public class GameView extends JPanel implements ActionListener {
         player1HPCount.setText(String.valueOf(state.player1.fighter.HP) + "/1000");
         player2HPCount.setText(String.valueOf(state.player2.fighter.HP) + "/1000");
 
-        if (state.currentPlayer.currentAnimationImg.equals(state.currentPlayer.fighter.staggerRight))
-        System.out.println(true);
-
         //Animation updates and settings
         //Images stored in the fighter subclasses
         if (!state.player1.isAttacking 
             && (state.player1.currentX <= state.player2.currentX) 
             && !state.player1.currentAction.equals("got punched") 
             && !state.player1.currentAction.equals("got kicked") 
-            && !state.player1.currentAction.equals("got uppercut")) {
+            && !state.player1.currentAction.equals("got uppercut")
+            && !state.player1.currentAction.equals("got special")) {
             state.player1.currentAnimationImg = state.player1.fighter.idleLeft;
         } else if (!state.player1.isAttacking 
             && (state.player1.currentX > state.player2.currentX) 
             && !state.player1.currentAction.equals("got punched") 
             && !state.player1.currentAction.equals("got kicked")
-            && !state.player1.currentAction.equals("got uppercut")) {
+            && !state.player1.currentAction.equals("got uppercut")
+            && !state.player1.currentAction.equals("got special")) {
             state.player1.currentAnimationImg = state.player1.fighter.idleRight;
         }
         
@@ -93,13 +93,15 @@ public class GameView extends JPanel implements ActionListener {
             && (state.player1.currentX <= state.player2.currentX) 
             && !state.player2.currentAction.equals("got punched") 
             && !state.player2.currentAction.equals("got kicked")
-            && !state.player2.currentAction.equals("got uppercut")) {
+            && !state.player2.currentAction.equals("got uppercut")
+            && !state.player2.currentAction.equals("got special")) {
             state.player2.currentAnimationImg = state.player2.fighter.idleRight;
         } else if (!state.player2.isAttacking 
             && (state.player1.currentX > state.player2.currentX) 
             && !state.player2.currentAction.equals("got punched") 
             && !state.player2.currentAction.equals("got kicked")
-            && !state.player2.currentAction.equals("got uppercut")) {
+            && !state.player2.currentAction.equals("got uppercut")
+            && !state.player2.currentAction.equals("got special")) {
             state.player2.currentAnimationImg = state.player2.fighter.idleLeft;
         }
 
@@ -112,8 +114,7 @@ public class GameView extends JPanel implements ActionListener {
                 if (state.player2.currentAction.equals("got punched") && !state.player2.hasRun) {
                     state.player2.currentAnimationImg = state.player2.fighter.staggerRight;
                     state.player2.currentX += 50;
-                    // g.drawImage(state.player1.currentAnimationImg, state.player1.currentX, state.player1.currentY, this); //Player 1 (Host)
-                    // g.drawImage(state.player2.fighter.staggerRight, state.player2.currentX, state.player2.currentY, this); // Client
+                    attackTimer("punch");
                     state.player2.hasRun = true;
                 }
 
@@ -124,8 +125,7 @@ public class GameView extends JPanel implements ActionListener {
                 if (state.player2.currentAction.equals("got punched") && !state.player2.hasRun) {
                     state.player2.currentAnimationImg = state.player2.fighter.staggerLeft;
                     state.player2.currentX -= 50;
-                    // g.drawImage(state.player1.currentAnimationImg, state.player1.currentX, state.player1.currentY, this); //Player 1 (Host)
-                    // g.drawImage(state.player2.fighter.staggerLeft, state.player2.currentX, state.player2.currentY, this); // Client
+                    attackTimer("punch");
                     state.player2.hasRun = true;
                 }
 
@@ -140,8 +140,8 @@ public class GameView extends JPanel implements ActionListener {
                 if (state.player1.currentAction.equals("got punched") && !state.player1.hasRun) {
                     state.player1.currentAnimationImg = state.player1.fighter.staggerLeft;
                     state.player1.currentX -= 50;
-                    state.player1.hasRun = true;
-                    //attackTimer("punch");
+                    attackTimer("punch");
+                    state.player1.hasRun = true;                    
                 }
 
             } else if (state.player1.currentX > state.player2.currentX) {
@@ -151,6 +151,7 @@ public class GameView extends JPanel implements ActionListener {
                 if (state.player1.currentAction.equals("got punched") && !state.player1.hasRun) {
                     state.player1.currentAnimationImg = state.player1.fighter.staggerRight;
                     state.player1.currentX += 50;
+                    attackTimer("punch");
                     state.player1.hasRun = true;
                 }
             }
@@ -167,6 +168,7 @@ public class GameView extends JPanel implements ActionListener {
                 if (state.player2.currentAction.equals("got kicked") && !state.player2.hasRun) {
                     state.player2.currentAnimationImg = state.player2.fighter.staggerRight;
                     state.player2.currentX += 80;
+                    attackTimer("kick");
                     state.player2.hasRun = true;
                 }
 
@@ -177,6 +179,7 @@ public class GameView extends JPanel implements ActionListener {
                 if (state.player2.currentAction.equals("got kicked") && !state.player2.hasRun) {
                     state.player2.currentAnimationImg = state.player2.fighter.staggerLeft;
                     state.player2.currentX -= 80;
+                    attackTimer("kick");
                     state.player2.hasRun = true;
                 }
 
@@ -192,8 +195,8 @@ public class GameView extends JPanel implements ActionListener {
                 if (state.player1.currentAction.equals("got kicked") && !state.player1.hasRun) {
                     state.player1.currentAnimationImg = state.player1.fighter.staggerLeft;
                     state.player1.currentX -= 80;
-                    state.player1.hasRun = true;
-                    //attackTimer("kick");
+                    attackTimer("kick");
+                    state.player1.hasRun = true;                    
                 }
 
             } else if (state.player1.currentX > state.player2.currentX) {
@@ -203,6 +206,7 @@ public class GameView extends JPanel implements ActionListener {
                 if (state.player1.currentAction.equals("got kicked") && !state.player1.hasRun) {
                     state.player1.currentAnimationImg = state.player1.fighter.staggerRight;
                     state.player1.currentX += 80;
+                    attackTimer("kick");
                     state.player1.hasRun = true;
                 }
             }
@@ -210,7 +214,6 @@ public class GameView extends JPanel implements ActionListener {
 
         //Uppercuts
         if (state.currentPlayer.equals(state.player2) && state.player1.isAttacking && state.player1.currentAction.equals("uppercut")) {
-            //TODO: Fix
             if (state.player1.currentX <= state.player2.currentX) {
                 state.player1.currentAnimationImg = state.player1.fighter.uppercutLeft;
                 hitbox.uppercutHitbox();
@@ -219,6 +222,7 @@ public class GameView extends JPanel implements ActionListener {
                     state.player2.currentAnimationImg = state.player2.fighter.staggerRight;
                     state.player2.currentX += 60;
                     state.player2.currentY -= 180;
+                    attackTimer("uppercut");
                     state.player2.hasRun = true;
                 }
 
@@ -230,6 +234,7 @@ public class GameView extends JPanel implements ActionListener {
                     state.player2.currentAnimationImg = state.player2.fighter.staggerLeft;
                     state.player2.currentX -= 60;
                     state.player2.currentY -= 180;
+                    attackTimer("uppercut");
                     state.player2.hasRun = true;
                 }
 
@@ -237,7 +242,6 @@ public class GameView extends JPanel implements ActionListener {
         }
 
         if (state.currentPlayer.equals(state.player1) && state.player2.isAttacking && state.player2.currentAction.equals("uppercut")) {
-            //TODO: Fix
             if (state.player1.currentX <= state.player2.currentX) {
                 state.player2.currentAnimationImg = state.player2.fighter.uppercutRight;
                 hitbox.uppercutHitbox();
@@ -246,8 +250,8 @@ public class GameView extends JPanel implements ActionListener {
                     state.player1.currentAnimationImg = state.player1.fighter.staggerLeft;
                     state.player1.currentX -= 60;
                     state.player1.currentY -= 180;
+                    attackTimer("uppercut");
                     state.player1.hasRun = true;
-                    //attackTimer("uppercut");
                 }
 
             } else if (state.player1.currentX > state.player2.currentX) {
@@ -258,30 +262,67 @@ public class GameView extends JPanel implements ActionListener {
                     state.player1.currentAnimationImg = state.player1.fighter.staggerRight;
                     state.player1.currentX += 60;
                     state.player1.currentY -= 180;
+                    attackTimer("uppercut");
                     state.player1.hasRun = true;
                 }
             }
         }
 
-        //TODO: Special Moves Animations
-        //Ice Ball (in progress):
-        if (state.player1.fighter.name.equals("Subzero")) {
-            animateIceBall(g, iceBall1);
-        } 
-        if (state.player2.fighter.name.equals("Subzero")) {
-            animateIceBall(g, iceBall2);
+        //Ice Ball
+        if (state.currentPlayer.equals(state.player2) && state.player1.isAttacking && state.player1.fighter.name.equals("Subzero")) {
+
+            if (state.player1.currentX <= state.player2.currentX && state.player2.currentAction.equals("got special") && !state.player2.hasRun) {
+                state.player1.currentAnimationImg = state.player1.fighter.specialLeft;
+
+                if (state.player2.currentAction.equals("got special") && !state.player2.hasRun) {
+                    state.player2.currentAnimationImg = state.player2.fighter.staggerRight;
+                    attackTimer("freeze");
+                    state.player2.hasRun = true;
+                }                
+
+            } else if (state.player1.currentX > state.player2.currentX && state.player2.currentAction.equals("got special") && !state.player2.hasRun) {
+                state.player1.currentAnimationImg = state.player1.fighter.specialRight;
+
+                if (state.player2.currentAction.equals("got special") && !state.player2.hasRun) {
+                    state.player2.currentAnimationImg = state.player2.fighter.staggerLeft;
+                    attackTimer("freeze");
+                    state.player2.hasRun = true;
+                }
+                
+            }
         }
 
-        //Update movement (we'll see if this needs to be moved all the way to the top)
-        g.drawImage(state.player1.currentAnimationImg, state.player1.currentX, state.player1.currentY, this); //Player 1 (Host)
-        g.drawImage(state.player2.currentAnimationImg, state.player2.currentX, state.player2.currentY, this); // Client
+        if (state.currentPlayer.equals(state.player1) && state.player2.isAttacking && state.player2.fighter.name.equals("Subzero")) {
 
-        //Refresh to default frame settings for other player after an attack
-        state.player1.movementDisabled = false;
-        state.player2.movementDisabled = false;
-        //state.player1.currentAction = "Idle";
-        //state.player2.currentAction = "Idle";   
-         
+            if (state.player1.currentX <= state.player2.currentX && state.player1.currentAction.equals("got special") && !state.player1.hasRun) {
+                state.player2.currentAnimationImg = state.player2.fighter.specialRight;
+
+                if (state.player1.currentAction.equals("got special") && !state.player1.hasRun) {
+                    state.player1.currentAnimationImg = state.player1.fighter.staggerLeft;    
+                    attackTimer("freeze");    
+                    state.player1.hasRun = true;                               
+                }
+                 
+
+            } else if (state.player1.currentX > state.player2.currentX && state.player1.currentAction.equals("got special") && !state.player1.hasRun) {
+                state.player2.currentAnimationImg = state.player2.fighter.specialLeft;
+
+                if (state.player1.currentAction.equals("got special") && !state.player1.hasRun) {
+                    state.player1.currentAnimationImg = state.player1.fighter.staggerRight;
+                    attackTimer("freeze");
+                    state.player1.hasRun = true;
+                }
+                
+            }
+            
+        }
+
+        //Animate ice ball - method checks for special used by Subzeros before drawing
+        animateIceBall(g);
+
+        //Update movement 
+        g.drawImage(state.player1.currentAnimationImg, state.player1.currentX, state.player1.currentY, this); //Player 1 (Host)
+        g.drawImage(state.player2.currentAnimationImg, state.player2.currentX, state.player2.currentY, this); // Client         
     }
 
     @Override
@@ -289,11 +330,16 @@ public class GameView extends JPanel implements ActionListener {
         if (evt.getSource() == timer) {
             if (state.player1 == null || state.player2 == null) { return; }
 
-            if (state.player1.fighter.name.equals("Subzero") && state.player1.fighter.isSpecialBeingUsed == true) {
-                iceBall1.iceBallX += 50;
+            if (state.player1.fighter.name.equals("Subzero") && state.player1.fighter.isSpecialBeingUsed == true && state.player1.currentAction.equals("special")) {
+                state.iceBall1.iceBallX += 10;
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",special,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("iceBall1,"+state.iceBall1.iceBallX+","+state.iceBall1.toRender);
             } 
-            if (state.player2.fighter.name.equals("Subzero") && state.player2.fighter.isSpecialBeingUsed == true) {
-                iceBall2.iceBallX += 50;
+
+            if (state.player2.fighter.name.equals("Subzero") && state.player2.fighter.isSpecialBeingUsed == true && state.player2.currentAction.equals("special")) {
+                state.iceBall2.iceBallX += 10;
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",special,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
             }
 
             forceFrame();
@@ -316,15 +362,15 @@ public class GameView extends JPanel implements ActionListener {
             state.player2.currentX = 1280 - state.player2.fighter.WIDTH;
         }
 
-        if (state.player1.currentY < 500 - state.player1.fighter.HEIGHT - 180) { //Ensure jump doesn't overshoot
+        if (state.player1.currentY < 500 - state.player1.fighter.HEIGHT) { //Ensure jump doesn't overshoot
             state.player1.currentY = 500 - state.player1.fighter.HEIGHT; 
-        } else if (state.player1.currentY > 680 - state.player1.fighter.HEIGHT - 180) { //Ensure landing doesn't overshoot
+        } else if (state.player1.currentY > 680 - state.player1.fighter.HEIGHT) { //Ensure landing doesn't overshoot
             state.player1.currentY = 680 - state.player1.fighter.HEIGHT;
         }
 
-        if (state.player2.currentY < 500 - state.player2.fighter.HEIGHT - 180) { //Ensure jump doesn't overshoot
+        if (state.player2.currentY < 500 - state.player2.fighter.HEIGHT) { 
             state.player2.currentY = 500 - state.player2.fighter.HEIGHT; 
-        } else if (state.player2.currentY > 680 - state.player2.fighter.HEIGHT - 180) { //Ensure landing doesn't overshoot
+        } else if (state.player2.currentY > 680 - state.player2.fighter.HEIGHT) { 
             state.player2.currentY = 680 - state.player2.fighter.HEIGHT;
         }
     }
@@ -350,7 +396,9 @@ public class GameView extends JPanel implements ActionListener {
             delay = 500;
         } else if (attack.equals("uppercut")) {
             delay = 1000;
-        }
+        } else if (attack.equals("freeze")) {
+            delay = 7000; //Might make it longer later, we'll see
+        }    
         System.out.println("starting timer");
 
         Timer attackTimer = new Timer(delay, new ActionListener() {
@@ -363,7 +411,7 @@ public class GameView extends JPanel implements ActionListener {
 
                         if (state.player1.currentX <= state.player2.currentX) {
                             state.player1.currentX -= 50;
-                        } else if (state.player1.currentX < state.player2.currentX) {
+                        } else if (state.player1.currentX > state.player2.currentX) {
                             state.player1.currentX += 50;
                         }
                     } 
@@ -373,7 +421,7 @@ public class GameView extends JPanel implements ActionListener {
                         
                         if (state.player1.currentX <= state.player2.currentX) {
                             state.player2.currentX += 50;
-                        } else if (state.player1.currentX < state.player2.currentX) {
+                        } else if (state.player1.currentX > state.player2.currentX) {
                             state.player2.currentX -= 50;
                         }
 
@@ -388,9 +436,19 @@ public class GameView extends JPanel implements ActionListener {
                 state.player1.hasRun = false; 
                 state.player2.hasRun = false;
 
+                //Set back the player's idle positions:
+                if (state.player1.currentX <= state.player2.currentX) {
+                    state.player1.currentAnimationImg = state.player1.fighter.idleLeft;
+                    state.player2.currentAnimationImg = state.player2.fighter.idleRight;
+                } else if (state.player1.currentX > state.player2.currentX) {
+                    state.player1.currentAnimationImg = state.player1.fighter.idleRight;
+                    state.player2.currentAnimationImg = state.player2.fighter.idleLeft;
+                }
+                
+
                 state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+","+state.player1.currentAction+","+state.player1.movementDisabled+","+state.player1.hasRun);
                 state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+","+state.player2.currentAction+","+state.player2.movementDisabled+","+state.player2.hasRun);
-                //state.ssm.sendText((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+","+state.currentPlayer.currentAction+","+state.currentPlayer.movementDisabled);
+                
             }
         });
         attackTimer.setRepeats(false);
@@ -403,41 +461,139 @@ public class GameView extends JPanel implements ActionListener {
 
     }
 
-    //TODO: Create IceBall animations for both players in paintComponent
-    private void animateIceBall(Graphics g, IceBall iceBall) {
-        //TODO: animate Sub Zero's ice ball -- freezes opponent for set amount of time
-        //While ice ball is being thrown, do we want it to be stuck in that pose/image?
+    /**
+     * Method to animate Subzero's Ice Ball, if Subzero uses his special move
+     * @param g Graphics g to draw ice ball images
+     */
+    private void animateIceBall(Graphics g) {
+        
         if (state.player1.fighter.name.equals("Subzero") && state.player1.fighter.isSpecialBeingUsed && !state.player1.currentAction.equals("jump")) {
+            state.player1.currentAction = "special";
+
+            //Use hitbox logic to stop ice ball when it hits the target - Add toRender boolean on IceBall
+            String result = "";
+            result = hitbox.IceBallHitbox();
             
-            //If target is reached (regardless of block or not):
-            if (iceBall.iceBallX >= state.player2.currentX && iceBall.iceBallX <= state.player2.currentX+state.player2.fighter.WIDTH) {
+            if (result.equals("Left special hit")) {
+                state.player2.currentAnimationImg = state.player2.fighter.staggerRight;
+                state.player2.movementDisabled = true;
+                state.player1.isAttacking = false;
                 state.player1.fighter.isSpecialBeingUsed = false;
-                iceBall.iceBallX = 0; //Revert to default settings
+                state.player1.currentAction = "Idle";
+                state.player1.movementDisabled = false;
+                state.iceBall1.iceBallX = 0;    
+                state.iceBall1.toRender = false;          
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("iceBall1,"+state.iceBall1.iceBallX+","+state.iceBall1.toRender);
+                return;
+                
+            } else if (result.equals("Right special hit")) {
+                state.player2.currentAnimationImg = state.player2.fighter.staggerLeft;
+                state.player2.movementDisabled = true;
+                state.player1.isAttacking = false;
+                state.player1.fighter.isSpecialBeingUsed = false;
+                state.player1.currentAction = "Idle";
+                state.player1.movementDisabled = false;
+                state.iceBall1.iceBallX = 0;
+                state.iceBall1.toRender = false;
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("iceBall1,"+state.iceBall1.iceBallX+","+state.iceBall1.toRender);
+                return;
             }
 
-            //Movement based on side:
-            if (state.player1.currentX <= state.player2.currentX) { //Left
-                g.drawImage(iceBall.IceBallLeft, state.player1.currentX + state.player1.fighter.WIDTH + iceBall.iceBallX, 680 - state.player1.fighter.HEIGHT/2, null);
-                //TODO: Ice Ball Hitbox
-            } else if (state.player1.currentX > state.player2.currentX) { //Right
-                g.drawImage(iceBall.IceBallRight, state.player1.currentX - iceBall.iceBallX, 680 - state.player1.fighter.HEIGHT/3, null);
+            //Stop Ice Ball trajectory once it hits either end of the screen -- only activated if it hasn't already hit the opponent
+            if (state.iceBall1.iceBallX + state.iceBall1.WIDTH >= 1280 || state.iceBall1.iceBallX <= 0) {
+                state.player1.isAttacking = false;
+                state.player1.movementDisabled = false;
+                state.player1.currentAction = "Idle";
+                state.iceBall1.iceBallX = 0; //Revert to default settings
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("iceBall1,"+state.iceBall1.iceBallX+","+state.iceBall1.toRender);
+                state.player1.fighter.isSpecialBeingUsed = false;
+                return;
+            }
+
+            //Draw movement based on side:
+            if (state.player1.currentX <= state.player2.currentX && state.iceBall1.toRender) { //Left
+
+                g.drawImage(state.iceBall1.IceBallLeft, state.player1.currentX + state.player1.fighter.WIDTH + state.iceBall1.iceBallX, (int)(680 - state.player1.fighter.HEIGHT), null);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("iceBall1,"+state.iceBall1.iceBallX+","+state.iceBall1.toRender);
+
+            } else if (state.player1.currentX > state.player2.currentX && state.iceBall1.toRender) { //Right
+
+                g.drawImage(state.iceBall1.IceBallRight, state.player1.currentX - state.iceBall1.iceBallX, (int)(680 - state.player1.fighter.HEIGHT), null);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("iceBall1,"+state.iceBall1.iceBallX+","+state.iceBall1.toRender);
             }
         }
 
         if (state.player2.fighter.name.equals("Subzero") && state.player2.fighter.isSpecialBeingUsed && !state.player2.currentAction.equals("jump")) {
+            state.player2.currentAction = "special";
+
+            //Hitbox check:
+            String result = "";
+            result = hitbox.IceBallHitbox();
             
-            //If target is reached (regardless of block or not):
-            if (iceBall.iceBallX >= state.player2.currentX && iceBall.iceBallX <= state.player2.currentX+state.player2.fighter.WIDTH) {
+            if (result.equals("Left special hit")) {
+                state.player1.currentAnimationImg = state.player1.fighter.staggerRight;
+                state.player1.movementDisabled = true;
+                state.player2.isAttacking = false;
                 state.player2.fighter.isSpecialBeingUsed = false;
-                iceBall.iceBallX = 0; //Revert to default settings
+                state.player2.currentAction = "Idle";
+                state.player2.movementDisabled = false;
+                state.iceBall2.iceBallX = 0;
+                state.iceBall2.toRender = false;                        
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
+                return;
+                
+            } else if (result.equals("Right special hit")) {
+                state.player1.currentAnimationImg = state.player1.fighter.staggerLeft;
+                state.player1.movementDisabled = true;
+                state.player2.isAttacking = false;
+                state.player2.fighter.isSpecialBeingUsed = false;
+                state.player2.currentAction = "Idle";
+                state.player2.movementDisabled = false;
+                state.iceBall2.iceBallX = 0;
+                state.iceBall2.toRender = false;
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
+                return;
+            }
+            
+            //If the ball hits either end         
+            if (state.iceBall2.iceBallX + state.iceBall2.WIDTH >= 1280 || state.iceBall2.iceBallX <= 0) {
+                state.player2.movementDisabled = false;
+                state.player2.currentAction = "Idle";
+                state.iceBall2.iceBallX = 0; //Revert to default settings
+                state.iceBall2.toRender = false;
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
+                state.player2.fighter.isSpecialBeingUsed = false;
+                return;
             }
 
             //Movement based on side:
-            if (state.player1.currentX <= state.player2.currentX) { //Right
-                g.drawImage(iceBall.IceBallRight, state.player2.currentX - iceBall.iceBallX, 680 - state.player2.fighter.HEIGHT/3, null);
-                //TODO: Ice Ball Hitbox
-            } else if (state.player1.currentX > state.player2.currentX) { //Left
-                g.drawImage(iceBall.IceBallLeft, state.player2.currentX + state.player2.fighter.WIDTH + iceBall.iceBallX, 680 - state.player2.fighter.HEIGHT/2, null);
+            if (state.player1.currentX <= state.player2.currentX && state.iceBall2.toRender) { //Right
+               
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
+                g.drawImage(state.iceBall2.IceBallRight, state.player2.currentX - state.iceBall2.iceBallX, (int)(680 - state.player2.fighter.HEIGHT), null);
+                
+            } else if (state.player1.currentX > state.player2.currentX && state.iceBall2.toRender) { //Left
+                
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
+                g.drawImage(state.iceBall2.IceBallLeft, state.player2.currentX + state.player2.fighter.WIDTH + state.iceBall2.iceBallX, (int)(680 - state.player2.fighter.HEIGHT), null);
             }
         }
 
@@ -481,8 +637,8 @@ public class GameView extends JPanel implements ActionListener {
         this.add(player2HPCount);
 
         //Create new Ice Ball Instances for Sub-Zero
-        iceBall1 = new IceBall();
-        iceBall2 = new IceBall();
+        state.iceBall1 = new IceBall();
+        state.iceBall2 = new IceBall();
 
         //Loading the fight background:
         //Try to read the image from both the jar file and local drive
@@ -516,7 +672,7 @@ public class GameView extends JPanel implements ActionListener {
                 if (!state.currentPlayer.movementDisabled) {
                     state.currentPlayer.currentX += 10;
                     forceFrame();
-                    System.out.println((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",moved right,"+state.currentPlayer.movementDisabled);
+                    //System.out.println((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",moved right,"+state.currentPlayer.movementDisabled);
                     state.ssm.sendText((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",moved right,"+state.currentPlayer.movementDisabled);
                 }
             }
@@ -529,7 +685,7 @@ public class GameView extends JPanel implements ActionListener {
                 if (!state.currentPlayer.movementDisabled) {
                     state.currentPlayer.currentX -= 10;
                     forceFrame();
-                    System.out.println((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",moved left,"+state.currentPlayer.movementDisabled);
+                    //System.out.println((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",moved left,"+state.currentPlayer.movementDisabled);
                     state.ssm.sendText((state.currentPlayer.equals(state.player1) ? "host," : "client,") +state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",moved left,"+state.currentPlayer.movementDisabled);
                 }
             }
@@ -600,7 +756,6 @@ public class GameView extends JPanel implements ActionListener {
                     forceFrame();
                     if (result.equals("Left kick hit")) {
                         state.player2.currentAnimationImg = state.player2.fighter.staggerRight;
-                        //System.out.println("animation img correct? "+state.player1.currentAnimationImg.equals(state.player1.fighter.staggerRight));
                         state.player2.currentX += 80;
                     } else if (result.equals("Right kick hit")) {
                         state.player2.currentAnimationImg = state.player2.fighter.staggerLeft;
@@ -616,7 +771,6 @@ public class GameView extends JPanel implements ActionListener {
 
                     if (result.equals("Left kick hit")) {
                         state.player1.currentAnimationImg = state.player1.fighter.staggerRight;
-                        //System.out.println("animation img correct? "+state.player1.currentAnimationImg.equals(state.player1.fighter.staggerRight));
                         state.player1.currentX += 80;
                     } else if (result.equals("Right kick hit")) {
                         state.player1.currentAnimationImg = state.player1.fighter.staggerLeft;
@@ -639,7 +793,6 @@ public class GameView extends JPanel implements ActionListener {
                     forceFrame();
                     if (result.equals("Left uppercut hit")) {
                         state.player2.currentAnimationImg = state.player2.fighter.staggerRight;
-                        //System.out.println("animation img correct? "+state.player1.currentAnimationImg.equals(state.player1.fighter.staggerRight));
                         state.player2.currentX += 60;
                         state.player2.currentY -= 180;
                     } else if (result.equals("Right uppercut hit")) {
@@ -657,7 +810,6 @@ public class GameView extends JPanel implements ActionListener {
 
                     if (result.equals("Left uppercut hit")) {
                         state.player1.currentAnimationImg = state.player1.fighter.staggerRight;
-                        //System.out.println("animation img correct? "+state.player1.currentAnimationImg.equals(state.player1.fighter.staggerRight));
                         state.player1.currentX += 60;
                         state.player1.currentY -= 180;
                     } else if (result.equals("Right uppercut hit")) {
@@ -674,19 +826,23 @@ public class GameView extends JPanel implements ActionListener {
         this.getActionMap().put("special", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {                 
-                if (state.currentPlayer.equals(state.player1) && !state.player1.movementDisabled) {
+                if (state.currentPlayer.equals(state.player1) && !state.player1.movementDisabled && state.currentPlayer.fighter.name.equals("Subzero")) {
                     state.currentPlayer.specialMove(state.player2);
                     state.currentPlayer.fighter.isSpecialBeingUsed = true;
-                    forceFrame();
-                    state.ssm.sendText("host,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",special,"+state.currentPlayer.movementDisabled+","+state.currentPlayer.hasRun);
-                    //attackTimer();
-                } else if (state.currentPlayer.equals(state.player2) && !state.player2.movementDisabled) {
+                    state.currentPlayer.currentAction = "special";
+                    state.iceBall1.toRender = true;
+                    state.ssm.sendText("host,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",special,"+state.currentPlayer.movementDisabled+","+state.currentPlayer.hasRun+","+state.currentPlayer.fighter.isSpecialBeingUsed);
+                    state.ssm.sendText("iceBall1,"+state.iceBall1.iceBallX+","+state.iceBall1.toRender);
+
+                } else if (state.currentPlayer.equals(state.player2) && !state.player2.movementDisabled && state.currentPlayer.fighter.name.equals("Subzero")) {
                     state.currentPlayer.specialMove(state.player1);
                     state.currentPlayer.fighter.isSpecialBeingUsed = true;
-                    forceFrame();
-                    state.ssm.sendText("client,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",special,"+state.currentPlayer.movementDisabled+","+state.currentPlayer.hasRun);
-                    //attackTimer();
-                }
+                    state.currentPlayer.currentAction = "special";
+                    state.iceBall2.toRender = true;
+                    state.ssm.sendText("client,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",special,"+state.currentPlayer.movementDisabled+","+state.currentPlayer.hasRun+","+state.currentPlayer.fighter.isSpecialBeingUsed);
+                    state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
+                    
+                }                
             }
         });
 

@@ -59,9 +59,11 @@ public class Player {
         if (currentX <= opponent.currentX) {
             currentAnimationImg = fighter.specialLeft;
             isAttacking = true;
+            this.movementDisabled = true;
         } else if (currentX > opponent.currentX) {
             currentAnimationImg = fighter.specialRight;
             isAttacking = true;
+            this.movementDisabled = true;
         }
     }
 

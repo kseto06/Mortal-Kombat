@@ -36,7 +36,7 @@ public class SubzeroFighter extends Fighter {
         InputStream staggerLeftClass = this.getClass().getResourceAsStream("src/assets/subzeroStaggerLeft.png");
         InputStream staggerRightClass = this.getClass().getResourceAsStream("src/assets/subzeroStaggerRight.png");
         InputStream specialLeftClass = this.getClass().getResourceAsStream("src/assets/subzeroSpecialLeft.png");
-        InputStream specialRightClass = this.getClass().getResourceAsStream("src/assets/subzeroSpecialRight.png");  
+        InputStream specialRightClass = this.getClass().getResourceAsStream("src/assets/subzeroSpecialRight.png"); 
            
 
         if (punchLeftClass != null && punchRightClass != null && kickLeftClass != null && kickRightClass != null && uppercutLeftClass != null && uppercutRightClass != null && specialLeftClass != null && specialRightClass != null && staggerLeftClass != null && staggerRightClass != null) {

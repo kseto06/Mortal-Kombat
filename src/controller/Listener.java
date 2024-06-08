@@ -14,19 +14,16 @@ public class Listener implements ActionListener {
             String msg = state.ssm.readText();
             //System.out.println("Reading message: "+msg);
             String[] msgComponents = msg.split(",");
-            //System.out.println("Component[0]: "+msgComponents[0] + " Component[1]:"+msgComponents[1] + " Component[2]:"+msgComponents[2]);
 
             //Character Selection View Socket
             if (msgComponents[0].equals("Host")) {
                 state.player1 = new Player(msgComponents[1]); //Update other screen
                 state.player1.chooseFighter(msgComponents[2]);
                 System.out.println(state.player1.fighter.name);
-                //state.player1.isReady = msgComponents[3].equals("true");
             } else if (msgComponents[0].equals("Client")) {
                 state.player2 = new Player(msgComponents[1]);
                 state.player2.chooseFighter(msgComponents[2]);
                 System.out.println(state.player2.fighter.name);
-                //state.player2.isReady = msgComponents[3].equals("true");
             }
 
             //Game View Socket
@@ -52,11 +49,14 @@ public class Listener implements ActionListener {
                     if (msgComponents[6] != null && !msgComponents[6].isEmpty()) {
                         state.player1.hasRun = msgComponents[6].equals("true");
                     }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    e.printStackTrace();
+                    //Special Move Check
+                    if (msgComponents[7] != null && !msgComponents[7].isEmpty()) {
+                        state.player1.fighter.isSpecialBeingUsed = msgComponents[7].equals("true");
+                    }
+                //General Exception to catch both ArrayIndexOutOfBoundsException and NullPointerException
+                } catch (Exception e) {
+                    //e.printStackTrace();
                 }
-
-                
 
             } else if (msgComponents[0].equals("client") && state.player2 != null) {
                 try {
@@ -79,11 +79,35 @@ public class Listener implements ActionListener {
                     if (msgComponents[6] != null && !msgComponents[6].isEmpty()) {
                         state.player2.hasRun = msgComponents[6].equals("true");
                     }
+                    //Special Move Check
+                    if (msgComponents[7] != null && !msgComponents[7].isEmpty()) {
+                        state.player2.fighter.isSpecialBeingUsed = msgComponents[7].equals("true");
+                    }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }       
                 
             }
+
+            //Special Move Sockets:
+            if (msgComponents[0].equals("iceBall1") && state.iceBall1 != null && state.player1 != null) {
+                try {
+                    state.iceBall1.iceBallX = Integer.valueOf(msgComponents[1]);
+                    state.iceBall1.toRender = msgComponents[2].equals("true");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (msgComponents[0].equals("iceBall2") && state.iceBall2 != null && state.player2 != null) {
+                try {
+                    state.iceBall2.iceBallX = Integer.valueOf(msgComponents[1]);
+                    state.iceBall2.toRender = msgComponents[2].equals("true");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
     }
 

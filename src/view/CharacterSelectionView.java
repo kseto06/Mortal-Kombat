@@ -46,7 +46,7 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
     //Images in this Class:
     static BufferedImage imgScorpSelection, imgSubZeroSelection, imgEnlargedScorp, imgEnlargedSub, imgBackground; //Small images = 120x240, Enlarged images = 300x600
 
-    Timer timer = new Timer(1000/60, this);
+    Timer timer = new Timer(1500, this);
 
     //Methods:
 
@@ -139,7 +139,6 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
         startGameTimer.setRepeats(false);
         startGameTimer.start();
     }
-
 
     /**
      * Function to draw larger image of Scorpion if chosen on the Character Selection Screen. Position changes depending on who selects

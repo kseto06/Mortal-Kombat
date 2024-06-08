@@ -13,4 +13,5 @@ public class GameState {
     public String ipAddress;
     public SuperSocketMaster ssm;
     public ActionListener listener;
+    public IceBall iceBall1, iceBall2;
 }
