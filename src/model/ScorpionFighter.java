@@ -35,8 +35,10 @@ public class ScorpionFighter extends Fighter {
         InputStream uppercutRightClass = this.getClass().getResourceAsStream("src/assets/scorpionUppercutRight.png");
         InputStream staggerLeftClass = this.getClass().getResourceAsStream("src/assets/scorpionStaggerLeft.png");
         InputStream staggerRightClass = this.getClass().getResourceAsStream("src/assets/scorpionStaggerRight.png");
+        InputStream blockLeftClass = this.getClass().getResourceAsStream("src/assets/scorpionBlockLeft.png");
+        InputStream blockRightClass = this.getClass().getResourceAsStream("src/assets/scorpionBlockRight.png");  
         InputStream specialLeftClass = this.getClass().getResourceAsStream("src/assets/scorpionSpecialLeft.png");
-        InputStream specialRightClass = this.getClass().getResourceAsStream("src/assets/scorpionSpecialRight.png");        
+        InputStream specialRightClass = this.getClass().getResourceAsStream("src/assets/scorpionSpecialRight.png");               
 
         if (punchLeftClass != null && punchRightClass != null && kickLeftClass != null && kickRightClass != null && uppercutLeftClass != null && uppercutRightClass != null && specialLeftClass != null && specialRightClass != null && staggerLeftClass != null && staggerRightClass != null) {
             try {
@@ -50,8 +52,10 @@ public class ScorpionFighter extends Fighter {
                 uppercutRight = ImageIO.read(uppercutRightClass);
                 staggerLeft = ImageIO.read(staggerLeftClass);
                 staggerRight = ImageIO.read(staggerRightClass);
+                blockLeft = ImageIO.read(blockLeftClass);
+                blockRight = ImageIO.read(blockRightClass);
                 specialLeft = ImageIO.read(specialLeftClass);
-                specialRight = ImageIO.read(specialRightClass);
+                specialRight = ImageIO.read(specialRightClass);                
                 
             } catch (IOException e) {
                 System.out.println("Unable to read/load image from jar");
@@ -69,9 +73,11 @@ public class ScorpionFighter extends Fighter {
                 uppercutRight = ImageIO.read(new File("src/assets/scorpionUppercutRight.png"));
                 staggerLeft = ImageIO.read(new File("src/assets/scorpionStaggerLeft.png"));
                 staggerRight = ImageIO.read(new File("src/assets/scorpionStaggerRight.png"));
+                blockLeft = ImageIO.read(new File("src/assets/scorpionBlockLeft.png"));
+                blockRight = ImageIO.read(new File("src/assets/scorpionBlockRight.png"));
                 specialLeft = ImageIO.read(new File("src/assets/scorpionSpecialLeft.png"));
-                specialRight = ImageIO.read(new File("src/assets/scorpionSpecialRight.png"));                
-
+                specialRight = ImageIO.read(new File("src/assets/scorpionSpecialRight.png"));    
+                  
             } catch (IOException e) {
                 System.out.println("Unable to read/load image");
                 e.printStackTrace();

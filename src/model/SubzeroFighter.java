@@ -37,6 +37,8 @@ public class SubzeroFighter extends Fighter {
         InputStream staggerRightClass = this.getClass().getResourceAsStream("src/assets/subzeroStaggerRight.png");
         InputStream specialLeftClass = this.getClass().getResourceAsStream("src/assets/subzeroSpecialLeft.png");
         InputStream specialRightClass = this.getClass().getResourceAsStream("src/assets/subzeroSpecialRight.png"); 
+        InputStream blockLeftClass = this.getClass().getResourceAsStream("src/assets/subzeroBlockLeft.png");
+        InputStream blockRightClass = this.getClass().getResourceAsStream("src/assets/subzeroBlockRight.png"); 
            
 
         if (punchLeftClass != null && punchRightClass != null && kickLeftClass != null && kickRightClass != null && uppercutLeftClass != null && uppercutRightClass != null && specialLeftClass != null && specialRightClass != null && staggerLeftClass != null && staggerRightClass != null) {
@@ -51,9 +53,10 @@ public class SubzeroFighter extends Fighter {
                 uppercutRight = ImageIO.read(uppercutRightClass);
                 staggerLeft = ImageIO.read(staggerLeftClass);
                 staggerRight = ImageIO.read(staggerRightClass);
-                
                 specialLeft = ImageIO.read(specialLeftClass);
-                specialRight = ImageIO.read(specialRightClass);                
+                specialRight = ImageIO.read(specialRightClass);       
+                blockLeft = ImageIO.read(blockLeftClass);
+                blockRight = ImageIO.read(blockRightClass);         
 
             } catch (IOException e) {
                 System.out.println("Unable to read/load image from jar");
@@ -73,6 +76,8 @@ public class SubzeroFighter extends Fighter {
                 staggerRight = ImageIO.read(new File("src/assets/subzeroStaggerRight.png"));
                 specialLeft = ImageIO.read(new File("src/assets/subzeroSpecialLeft.png"));
                 specialRight = ImageIO.read(new File("src/assets/subzeroSpecialRight.png"));
+                blockLeft = ImageIO.read(new File("src/assets/subzeroBlockLeft.png"));
+                blockRight = ImageIO.read(new File("src/assets/subzeroBlockRight.png"));  
                 
             } catch (IOException e) {
                 System.out.println("Unable to read/load image");

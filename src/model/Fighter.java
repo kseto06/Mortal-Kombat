@@ -6,7 +6,7 @@ public class Fighter {
     // Properties
     public int HP = 1000;
     public String name;
-    public BufferedImage idleLeft, idleRight, punchLeft, punchRight, kickLeft, kickRight, uppercutLeft, uppercutRight, specialLeft, specialRight, staggerLeft = null, staggerRight = null;
+    public BufferedImage idleLeft, idleRight, punchLeft, punchRight, kickLeft, kickRight, uppercutLeft, uppercutRight, specialLeft, specialRight, staggerLeft = null, staggerRight = null, blockLeft = null, blockRight = null;
     public int WIDTH, HEIGHT;
     public boolean isSpecialBeingUsed = false;
     

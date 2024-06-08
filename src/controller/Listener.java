@@ -53,6 +53,10 @@ public class Listener implements ActionListener {
                     if (msgComponents[7] != null && !msgComponents[7].isEmpty()) {
                         state.player1.fighter.isSpecialBeingUsed = msgComponents[7].equals("true");
                     }
+                    //Block Check
+                    if (msgComponents[8] != null && !msgComponents[8].isEmpty()) {
+                        state.player1.isBlocking = msgComponents[8].equals("true");
+                    }
                 //General Exception to catch both ArrayIndexOutOfBoundsException and NullPointerException
                 } catch (Exception e) {
                     //e.printStackTrace();
@@ -82,6 +86,10 @@ public class Listener implements ActionListener {
                     //Special Move Check
                     if (msgComponents[7] != null && !msgComponents[7].isEmpty()) {
                         state.player2.fighter.isSpecialBeingUsed = msgComponents[7].equals("true");
+                    }
+                    //Block Check
+                    if (msgComponents[8] != null && !msgComponents[8].isEmpty()) {
+                        state.player2.isBlocking = msgComponents[8].equals("true");
                     }
                 } catch (Exception e) {
                     //e.printStackTrace();

@@ -9,6 +9,7 @@ public class Player {
     public boolean movementDisabled = false;
     public boolean isKeyPressed = false;
     public boolean isAttacking = false;
+    public boolean isBlocking = false;
     public boolean hasRun = false; //check if stagger has run
     public int currentX, currentY;
     public BufferedImage currentAnimationImg;
@@ -64,6 +65,26 @@ public class Player {
             currentAnimationImg = fighter.specialRight;
             isAttacking = true;
             this.movementDisabled = true;
+        }
+    }
+
+    public void block(Player opponent) {
+        if (currentX <= opponent.currentX) {
+            currentAnimationImg = fighter.blockLeft;
+            isBlocking = true;
+        } else if (currentX > opponent.currentX) {
+            currentAnimationImg = fighter.blockRight;
+            isBlocking = true;
+        }
+    }
+
+    public void blockRelease(Player opponent) {
+        if (currentX <= opponent.currentX) {
+            currentAnimationImg = fighter.idleLeft;
+            isBlocking = false;
+        } else if (currentX > opponent.currentX) {
+            currentAnimationImg = fighter.idleRight;
+            isBlocking = false;
         }
     }
 
