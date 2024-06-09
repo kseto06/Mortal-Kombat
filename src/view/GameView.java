@@ -22,7 +22,6 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import javax.swing.plaf.nimbus.AbstractRegionPainter;
 
 import controller.Hitbox;
 import model.GameState;

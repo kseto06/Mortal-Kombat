@@ -6,26 +6,22 @@ package view;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import model.GameState;
 
 public class MainView {
     //Properties
-    public static JFrame frame = new JFrame("View Testing");
+    public static JFrame frame = new JFrame("Mortal Kombat");
     public static CardLayout cardLayout = new CardLayout();
     GameState state;
     public static JPanel panel = new JPanel();
     HomeView homeView;
     CharacterSelectionView characterSelectionView;
     GameView gameView;
+    HelpView helpView;
 
     //Constructor (Testing):
     public MainView(GameState state) {
@@ -33,11 +29,13 @@ public class MainView {
         homeView = new HomeView(this.state);
         characterSelectionView = new CharacterSelectionView(this.state);
         gameView = new GameView(this.state);
+        helpView = new HelpView();
         //Default settings. Using cardLayout to be able to switch between different screens throughout the game
         panel.setPreferredSize(new Dimension(1280, 720));
         panel.setLayout(cardLayout);
         panel.add(homeView, "homeScreen");
         panel.add(characterSelectionView, "characterSelectionView");
+        panel.add(helpView, "helpView");
         //panel.add(gameView, "gameView");
         cardLayout.show(panel, "homeScreen");
 
