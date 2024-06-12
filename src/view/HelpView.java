@@ -227,7 +227,7 @@ public class HelpView extends JPanel implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (attack.equals("uppercut")) {
-                    scorpX += 180;
+                    scorpY += 180; //reset ground position
                 }
 
                 currentScorpionImg = helpScorpion.idleRight;
