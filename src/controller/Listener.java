@@ -116,6 +116,24 @@ public class Listener implements ActionListener {
             }
 
             //Special Move Sockets:
+            if (msgComponents[0].equals("spear1") && state.spear1 != null && state.player1 != null) {
+                try {
+                    state.spear1.spearX = Integer.valueOf(msgComponents[1]);
+                    state.spear1.toRender = msgComponents[2].equals("true");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (msgComponents[0].equals("spear2") && state.spear2 != null && state.player2 != null) {
+                try {
+                    state.spear2.spearX = Integer.valueOf(msgComponents[1]);
+                    state.spear2.toRender = msgComponents[2].equals("true");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
             if (msgComponents[0].equals("iceBall1") && state.iceBall1 != null && state.player1 != null) {
                 try {
                     state.iceBall1.iceBallX = Integer.valueOf(msgComponents[1]);

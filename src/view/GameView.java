@@ -25,6 +25,7 @@ import javax.swing.Timer;
 
 import controller.Hitbox;
 import model.GameState;
+import model.Spear;
 import model.IceBall;
 
 public class GameView extends JPanel implements ActionListener {
@@ -272,6 +273,62 @@ public class GameView extends JPanel implements ActionListener {
             }
         }
 
+        //Spear
+        if (state.currentPlayer.equals(state.player2) && state.player1.isAttacking && state.player1.fighter.name.equals("Scorpion")) {
+
+            if (state.player1.currentX <= state.player2.currentX && state.player2.currentAction.equals("got special") && !state.player2.hasRun) {
+                state.player1.currentAnimationImg = state.player1.fighter.specialLeft;
+                hitbox.SpearHitbox();
+
+                if (state.player2.currentAction.equals("got special") && !state.player2.hasRun && !state.player2.isBlocking) {
+                    state.player2.currentAnimationImg = state.player2.fighter.staggerRight;
+                    attackTimer("spear");
+                    state.player2.hasRun = true;
+                }                
+
+            } else if (state.player1.currentX > state.player2.currentX && state.player2.currentAction.equals("got special") && !state.player2.hasRun) {
+                state.player1.currentAnimationImg = state.player1.fighter.specialRight;
+                hitbox.SpearHitbox();
+
+                if (state.player2.currentAction.equals("got special") && !state.player2.hasRun && !state.player2.isBlocking) {
+                    state.player2.currentAnimationImg = state.player2.fighter.staggerLeft;
+                    attackTimer("spear");
+                    state.player2.hasRun = true;
+                }
+                
+            }
+        }
+
+        if (state.currentPlayer.equals(state.player1) && state.player2.isAttacking && state.player2.fighter.name.equals("Scorpion")) {
+
+            if (state.player1.currentX <= state.player2.currentX && state.player1.currentAction.equals("got special") && !state.player1.hasRun) {
+                state.player2.currentAnimationImg = state.player2.fighter.specialRight;
+                hitbox.SpearHitbox();
+
+                if (state.player1.currentAction.equals("got special") && !state.player1.hasRun && !state.player1.isBlocking) {
+                    state.player1.currentAnimationImg = state.player1.fighter.staggerLeft;    
+                    attackTimer("spear");    
+                    state.player1.hasRun = true;                               
+                }
+                 
+
+            } else if (state.player1.currentX > state.player2.currentX && state.player1.currentAction.equals("got special") && !state.player1.hasRun) {
+                state.player2.currentAnimationImg = state.player2.fighter.specialLeft;
+                hitbox.SpearHitbox();
+
+                if (state.player1.currentAction.equals("got special") && !state.player1.hasRun && !state.player1.isBlocking) {
+                    state.player1.currentAnimationImg = state.player1.fighter.staggerRight;
+                    attackTimer("spear");
+                    state.player1.hasRun = true;
+                }
+                
+            }
+            
+        }
+
+        //Animate spear - method checks for special used by Scorpions before drawing
+        animateSpear(g);
+
         //Ice Ball
         if (state.currentPlayer.equals(state.player2) && state.player1.isAttacking && state.player1.fighter.name.equals("Subzero")) {
 
@@ -356,6 +413,18 @@ public class GameView extends JPanel implements ActionListener {
                 state.iceBall2.iceBallX += 10;
                 state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",special,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
+            }
+
+            if (state.player1.fighter.name.equals("Scorpion") && state.player1.fighter.isSpecialBeingUsed == true && state.player1.currentAction.equals("special")) {
+                state.spear1.spearX += 10;
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",special,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("spear1,"+state.spear1.spearX+","+state.spear1.toRender);
+            }
+
+            if (state.player2.fighter.name.equals("Scorpion") && state.player2.fighter.isSpecialBeingUsed == true && state.player2.currentAction.equals("special")) {
+                state.spear2.spearX += 10;
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",special,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("spear2,"+state.spear2.spearX+","+state.spear2.toRender);
             }
 
             forceFrame();
@@ -472,10 +541,158 @@ public class GameView extends JPanel implements ActionListener {
         attackTimer.start();
     }
 
-    private void animateScorpionSpear(Graphics g, int x, int y) {
-        //TODO: animate scorpion's spear throw -- changes based on which side
-        
+    /**
+     * Method to animate Scorpion's Spear, if Scorpion uses his special move
+     * @param g Graphics g to draw ice ball images
+     */
+    private void animateSpear(Graphics g) {
+        if (state.player1.fighter.name.equals("Scorpion") && state.player1.fighter.isSpecialBeingUsed && !state.player1.currentAction.equals("jump")) {
+            state.player1.currentAction = "special";
 
+            //Use hitbox logic to stop spear ball when it hits the target - Add toRender boolean on Spear
+            String result = "";
+            result = hitbox.SpearHitbox();
+
+            //If blocked, just reset the spear ball and fighter:
+            if (result.equals("spear blocked")) {
+                state.player1.isAttacking = false;
+                state.player1.fighter.isSpecialBeingUsed = false;
+                state.player1.currentAction = "Idle";
+                state.player1.movementDisabled = false;
+                state.spear1.spearX = 0;    
+                state.spear1.toRender = false; 
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("spear1,"+state.spear1.spearX+","+state.spear1.toRender);
+                return;
+            }
+            
+            if (result.equals("Left special hit")) {
+                state.player1.isAttacking = false;
+                state.player1.fighter.isSpecialBeingUsed = false;
+                state.player1.currentAction = "Idle";
+                state.player1.movementDisabled = false;
+                state.spear1.spearX = 0;    
+                state.spear1.toRender = false;          
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("spear1,"+state.spear1.spearX+","+state.spear1.toRender);
+                return;
+                
+            } else if (result.equals("Right special hit")) {
+                state.player1.isAttacking = false;
+                state.player1.fighter.isSpecialBeingUsed = false;
+                state.player1.currentAction = "Idle";
+                state.player1.movementDisabled = false;
+                state.spear1.spearX = 0;
+                state.spear1.toRender = false;
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("spear1,"+state.spear1.spearX+","+state.spear1.toRender);
+                return;
+            }
+
+            //Stop Spear Ball trajectory once it hits either end of the screen -- only activated if it hasn't already hit the opponent
+            if (state.spear1.spearX + state.spear1.WIDTH >= 1280 || state.spear1.spearX <= 0) {
+                state.player1.isAttacking = false;
+                state.player1.movementDisabled = false;
+                state.player1.currentAction = "Idle";
+                state.spear1.spearX = 0; //Revert to default settings
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("spear1,"+state.spear1.spearX+","+state.spear1.toRender);
+                state.player1.fighter.isSpecialBeingUsed = false;
+                return;
+            }
+
+            //Draw movement based on side:
+            if (state.player1.currentX <= state.player2.currentX && state.spear1.toRender) { //Left
+
+                g.drawImage(state.spear1.SpearLeft, state.player1.currentX + state.player1.fighter.WIDTH + state.spear1.spearX, (int)(680 - state.player1.fighter.HEIGHT), null);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("spear1,"+state.spear1.spearX+","+state.spear1.toRender);
+
+            } else if (state.player1.currentX > state.player2.currentX && state.spear1.toRender) { //Right
+
+                g.drawImage(state.spear1.SpearRight, state.player1.currentX - state.spear1.spearX, (int)(680 - state.player1.fighter.HEIGHT), null);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("spear1,"+state.spear1.spearX+","+state.spear1.toRender);
+            }
+        }
+
+        if (state.player2.fighter.name.equals("Subzero") && state.player2.fighter.isSpecialBeingUsed && !state.player2.currentAction.equals("jump")) {
+            state.player2.currentAction = "special";
+
+            //Hitbox check:
+            String result = "";
+            result = hitbox.SpearHitbox();
+
+            //If blocked, just reset the spear and fighter:
+            if (result.equals("spear blocked")) {
+                state.player2.isAttacking = false;
+                state.player2.fighter.isSpecialBeingUsed = false;
+                state.player2.currentAction = "Idle";
+                state.player2.movementDisabled = false;
+                state.spear2.spearX = 0;    
+                state.spear2.toRender = false; 
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("spear2,"+state.spear2.spearX+","+state.spear2.toRender);
+                return;
+            }
+            
+            if (result.equals("Left special hit")) {
+                state.player2.isAttacking = false;
+                state.player2.fighter.isSpecialBeingUsed = false;
+                state.player2.currentAction = "Idle";
+                state.player2.movementDisabled = false;
+                state.spear2.spearX = 0;
+                state.spear2.toRender = false;                        
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("spear2,"+state.spear2.spearX+","+state.spear2.toRender);
+                return;
+                
+            } else if (result.equals("Right special hit")) {
+                state.player2.isAttacking = false;
+                state.player2.fighter.isSpecialBeingUsed = false;
+                state.player2.currentAction = "Idle";
+                state.player2.movementDisabled = false;
+                state.spear2.spearX = 0;
+                state.spear2.toRender = false;
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("spear2,"+state.spear2.spearX+","+state.spear2.toRender);
+                return;
+            }
+            
+            //If the ball hits either end         
+            if (state.spear2.spearX + state.spear2.WIDTH >= 1280 || state.spear2.spearX <= 0) {
+                state.player2.movementDisabled = false;
+                state.player2.currentAction = "Idle";
+                state.spear2.spearX = 0; //Revert to default settings
+                state.spear2.toRender = false;
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("spear2,"+state.spear2.spearX+","+state.spear2.toRender);
+                state.player2.fighter.isSpecialBeingUsed = false;
+                return;
+            }
+
+            //Movement based on side:
+            if (state.player1.currentX <= state.player2.currentX && state.spear2.toRender) { //Right
+               
+                g.drawImage(state.spear2.SpearRight, state.player2.currentX - state.spear2.spearX, (int)(680 - state.player2.fighter.HEIGHT), null);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("spear2,"+state.spear2.spearX+","+state.spear2.toRender);
+                
+            } else if (state.player1.currentX > state.player2.currentX && state.spear2.toRender) { //Left
+                
+                g.drawImage(state.spear2.SpearLeft, state.player2.currentX + state.player2.fighter.WIDTH + state.spear2.spearX, (int)(680 - state.player2.fighter.HEIGHT), null);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("spear2,"+state.spear2.spearX+","+state.spear2.toRender);
+            }
+        }
     }
 
     /**
@@ -678,6 +895,10 @@ public class GameView extends JPanel implements ActionListener {
         player2HPCount.setLocation(760, 21);
         player2HPCount.setVerticalAlignment(SwingConstants.CENTER);
         this.add(player2HPCount);
+
+        //Create new Spear Instances for Scorpion
+        state.spear1 = new Spear();
+        state.spear2 = new Spear();
 
         //Create new Ice Ball Instances for Sub-Zero
         state.iceBall1 = new IceBall();
@@ -885,7 +1106,21 @@ public class GameView extends JPanel implements ActionListener {
                     state.iceBall2.toRender = true;
                     state.ssm.sendText("client,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",special,"+state.currentPlayer.movementDisabled+","+state.currentPlayer.fighter.HP+","+state.currentPlayer.hasRun+","+state.currentPlayer.fighter.isSpecialBeingUsed);
                     state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
-                    
+                } else if (state.currentPlayer.equals(state.player1) && !state.player1.movementDisabled && state.currentPlayer.fighter.name.equals("Scorpion") && !state.currentPlayer.isBlocking) {
+                    state.currentPlayer.specialMove(state.player2);
+                    state.currentPlayer.fighter.isSpecialBeingUsed = true;
+                    state.currentPlayer.currentAction = "special";
+                    state.spear1.toRender = true;
+                    state.ssm.sendText("host,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",special,"+state.currentPlayer.movementDisabled+","+state.currentPlayer.fighter.HP+","+state.currentPlayer.hasRun+","+state.currentPlayer.fighter.isSpecialBeingUsed);
+                    state.ssm.sendText("spear1,"+state.spear1.spearX+","+state.spear1.toRender);
+
+                } else if (state.currentPlayer.equals(state.player2) && !state.player2.movementDisabled && state.currentPlayer.fighter.name.equals("Scorpion") && !state.currentPlayer.isBlocking) {
+                    state.currentPlayer.specialMove(state.player1);
+                    state.currentPlayer.fighter.isSpecialBeingUsed = true;
+                    state.currentPlayer.currentAction = "special";
+                    state.spear2.toRender = true;
+                    state.ssm.sendText("client,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",special,"+state.currentPlayer.movementDisabled+","+state.currentPlayer.fighter.HP+","+state.currentPlayer.hasRun+","+state.currentPlayer.fighter.isSpecialBeingUsed);
+                    state.ssm.sendText("spear2,"+state.spear2.spearX+","+state.spear2.toRender);
                 }                
             }
         });

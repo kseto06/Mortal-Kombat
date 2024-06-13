@@ -379,7 +379,7 @@ public class Hitbox {
                 state.player2.movementDisabled = true;
                 state.player2.currentAction = "got special";
                 state.player2.takeDamage(state.currentPlayer.fighter.specialDamage);
-                state.ssm.sendText("client,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",got special,"+state.currentPlayer.movementDisabled);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.fighter.HP);
                 return "Right special hit";
         }
 
@@ -421,6 +421,90 @@ public class Hitbox {
         }   
         
         return "No ice ball hit"; //Default case
+    }
+
+    /**
+     * Calculates the hitbox for an spear hit (exclusive to a Scorpion fighter)
+     */
+    public String SpearHitbox() {
+        //Differentiate based on fighter, position, and opponent width
+        if (!state.currentPlayer.fighter.name.equals("Scorpion")) { return ""; }
+
+        if (state.currentPlayer.equals(state.player1)
+            && (state.spear1.spearX + state.spear1.WIDTH >= state.player2.currentX && state.spear1.spearX + state.spear1.WIDTH <= state.player2.currentX+state.player2.fighter.WIDTH)  
+            && state.currentPlayer.currentAnimationImg.equals(state.currentPlayer.fighter.specialLeft)
+            && !state.player2.currentAction.equals("jump")) {
+
+                //Check for blocking
+                if (state.player2.isBlocking) {
+                    //TODO: Reduced damage if opponent blocking
+                    return "spear blocked";
+                }
+
+                System.out.println("Left special hit");
+                state.player2.currentX = state.player1.currentX + 50;
+                state.player2.currentAction = "got special";
+                state.player2.takeDamage(state.currentPlayer.fighter.specialDamage);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.fighter.HP); //Send data to the opponent
+                return "Left special hit";
+
+        } else if (state.currentPlayer.equals(state.player1) 
+            && (state.spear1.spearX <= state.player2.currentX + state.player2.fighter.WIDTH && state.spear1.spearX >= state.player2.currentX)
+            && state.currentPlayer.currentAnimationImg.equals(state.currentPlayer.fighter.specialRight)
+            && !state.player2.currentAction.equals("jump")) {
+
+                //Check for blocking
+                if (state.player2.isBlocking) {
+                    //TODO: Reduced damage if opponent blocking
+                    return "spear blocked";
+                }
+
+                System.out.println("Right special hit");
+                state.player2.currentX = state.player1.currentX - 50;
+                state.player2.currentAction = "got special";
+                state.player2.takeDamage(state.currentPlayer.fighter.specialDamage);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.fighter.HP);
+                return "Right special hit";
+        }
+
+        if (state.currentPlayer.equals(state.player2) 
+            && (state.spear2.spearX + state.spear2.WIDTH >= state.player1.currentX && state.spear2.spearX + state.spear2.WIDTH <= state.player1.currentX+state.player1.fighter.WIDTH)
+            && state.currentPlayer.currentAnimationImg.equals(state.currentPlayer.fighter.specialLeft)
+            && !state.player1.currentAction.equals("jump")) {
+
+                //Check for blocking
+                if (state.player1.isBlocking) {
+                    //TODO: Reduced damage if opponent blocking
+                    return "spear blocked";
+                }
+
+                System.out.println("Left special hit");
+                state.player1.currentX = state.player2.currentX + 50;
+                state.player1.currentAction = "got special";
+                state.player1.takeDamage(state.currentPlayer.fighter.specialDamage);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.fighter.HP); 
+                return "Left special hit";
+
+        } else if (state.currentPlayer.equals(state.player2) 
+            && (state.spear2.spearX >= state.player2.currentX && state.spear2.spearX <= state.player2.currentX+state.player2.fighter.WIDTH)
+            && state.currentPlayer.currentAnimationImg.equals(state.currentPlayer.fighter.specialRight)
+            && !state.player1.currentAction.equals("jump")) {
+
+                //Check for blocking
+                if (state.player1.isBlocking) {
+                    //TODO: Reduced damage if opponent blocking
+                    return "spear blocked";
+                }
+
+                System.out.println("Right special hit");
+                state.player1.currentX = state.player2.currentX - 50;
+                state.player1.currentAction = "got special";
+                state.player1.takeDamage(state.currentPlayer.fighter.specialDamage);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.fighter.HP);
+                return "Right special hit";
+        }   
+        
+        return "No spear hit"; //Default case
     }
 
     //Constructor

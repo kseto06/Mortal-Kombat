@@ -14,4 +14,5 @@ public class GameState {
     public SuperSocketMaster ssm;
     public ActionListener listener;
     public IceBall iceBall1, iceBall2;
+    public Spear spear1, spear2;
 }
