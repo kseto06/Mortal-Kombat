@@ -416,13 +416,13 @@ public class GameView extends JPanel implements ActionListener {
             }
 
             if (state.player1.fighter.name.equals("Scorpion") && state.player1.fighter.isSpecialBeingUsed == true && state.player1.currentAction.equals("special")) {
-                state.spear1.spearX += 10;
+                state.spear1.spearX += 30;
                 state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",special,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("spear1,"+state.spear1.spearX+","+state.spear1.toRender);
             }
 
             if (state.player2.fighter.name.equals("Scorpion") && state.player2.fighter.isSpecialBeingUsed == true && state.player2.currentAction.equals("special")) {
-                state.spear2.spearX += 10;
+                state.spear2.spearX += 30;
                 state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",special,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("spear2,"+state.spear2.spearX+","+state.spear2.toRender);
             }
@@ -484,7 +484,9 @@ public class GameView extends JPanel implements ActionListener {
             delay = 1000;
         } else if (attack.equals("freeze")) {
             delay = 7000; //Might make it longer later, we'll see
-        }    
+        } else if (attack.equals("spear")) {
+            delay = 1000;
+        }
         System.out.println("starting timer");
 
         Timer attackTimer = new Timer(delay, new ActionListener() {
@@ -620,7 +622,7 @@ public class GameView extends JPanel implements ActionListener {
             }
         }
 
-        if (state.player2.fighter.name.equals("Subzero") && state.player2.fighter.isSpecialBeingUsed && !state.player2.currentAction.equals("jump")) {
+        if (state.player2.fighter.name.equals("Scorpion") && state.player2.fighter.isSpecialBeingUsed && !state.player2.currentAction.equals("jump")) {
             state.player2.currentAction = "special";
 
             //Hitbox check:
@@ -1106,7 +1108,9 @@ public class GameView extends JPanel implements ActionListener {
                     state.iceBall2.toRender = true;
                     state.ssm.sendText("client,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",special,"+state.currentPlayer.movementDisabled+","+state.currentPlayer.fighter.HP+","+state.currentPlayer.hasRun+","+state.currentPlayer.fighter.isSpecialBeingUsed);
                     state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
-                } else if (state.currentPlayer.equals(state.player1) && !state.player1.movementDisabled && state.currentPlayer.fighter.name.equals("Scorpion") && !state.currentPlayer.isBlocking) {
+                } 
+                
+                if (state.currentPlayer.equals(state.player1) && !state.player1.movementDisabled && state.currentPlayer.fighter.name.equals("Scorpion") && !state.currentPlayer.isBlocking) {
                     state.currentPlayer.specialMove(state.player2);
                     state.currentPlayer.fighter.isSpecialBeingUsed = true;
                     state.currentPlayer.currentAction = "special";
