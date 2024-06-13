@@ -63,7 +63,10 @@ public class Listener implements ActionListener {
                     }
                     //Block Check
                     if (msgComponents[9] != null && !msgComponents[9].isEmpty()) {
-                        state.player1.isBlocking = msgComponents[9].equals("true");
+                        System.out.println("Block: " + msgComponents[9]);
+                        if (msgComponents[9].equals("true")) {
+                            state.player1.block(state.player2);
+                        }
                     }
                 //General Exception to catch both ArrayIndexOutOfBoundsException and NullPointerException
                 } catch (Exception e) {
@@ -101,7 +104,10 @@ public class Listener implements ActionListener {
                     }
                     //Block Check
                     if (msgComponents[9] != null && !msgComponents[9].isEmpty()) {
-                        state.player2.isBlocking = msgComponents[9].equals("true");
+                        System.out.println("Block: " + msgComponents[9]);
+                        if(msgComponents[9].equals("true")) {
+                            state.player2.block(state.player1);
+                        }
                     }
                 } catch (Exception e) {
                     //e.printStackTrace();

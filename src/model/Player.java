@@ -77,21 +77,23 @@ public class Player {
     public void block(Player opponent) {
         if (currentX <= opponent.currentX) {
             currentAnimationImg = fighter.blockLeft;
-            isBlocking = true;
         } else if (currentX > opponent.currentX) {
             currentAnimationImg = fighter.blockRight;
-            isBlocking = true;
         }
+        currentAction = "block";
+        movementDisabled = true; 
+        isBlocking = true;
     }
 
     public void blockRelease(Player opponent) {
         if (currentX <= opponent.currentX) {
             currentAnimationImg = fighter.idleLeft;
-            isBlocking = false;
         } else if (currentX > opponent.currentX) {
             currentAnimationImg = fighter.idleRight;
-            isBlocking = false;
         }
+        currentAction = "idle";
+        movementDisabled = false; 
+        isBlocking = false;
     }
 
     //Constructor
