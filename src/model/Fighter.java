@@ -9,27 +9,7 @@ public class Fighter {
     public BufferedImage idleLeft, idleRight, punchLeft, punchRight, kickLeft, kickRight, uppercutLeft, uppercutRight, specialLeft, specialRight, staggerLeft = null, staggerRight = null, blockLeft = null, blockRight = null;
     public int WIDTH, HEIGHT;
     public boolean isSpecialBeingUsed = false;
-    
-    // Methods
-    public void punch(Fighter opponent) {
-        // TO-DO: Implement attack method
-    }
-
-    public void kick(Fighter opponent) {
-        // TO-DO: Implement attack method
-    }
-
-    public void uppercut(Fighter opponent) {
-        // TO-DO: Implement uppercut method
-    }
-
-    public void block() {
-        // TO-DO: Implement block method
-    }
-
-    public void takeDamage(int damage) {
-        // TO-DO: Implement takeDamage method
-    }
+    public int punchDamage, kickDamage, uppercutDamage, specialDamage;
     
     // Constructor
     public Fighter() {

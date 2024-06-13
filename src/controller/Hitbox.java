@@ -32,7 +32,8 @@ public class Hitbox {
             System.out.println("Left punch hit");
             state.player2.movementDisabled = true;
             state.player2.currentAction = "got punched";
-            state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got punched,"+state.player2.movementDisabled); //Send data to the opponent
+            state.player2.takeDamage(state.currentPlayer.fighter.punchDamage);
+            state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got punched,"+state.player2.movementDisabled+","+state.player2.fighter.HP); //Send data to the opponent
             return "Left punch hit";
 
         } else if (state.currentPlayer.equals(state.player1) 
@@ -49,7 +50,8 @@ public class Hitbox {
             System.out.println("Right punch hit");
             state.player2.movementDisabled = true;
             state.player2.currentAction = "got punched";
-            state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got punched,"+state.player2.movementDisabled);
+            state.player2.takeDamage(state.currentPlayer.fighter.punchDamage);
+            state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got punched,"+state.player2.movementDisabled+","+state.player2.fighter.HP);
             return "Right punch hit";
         }
 
@@ -67,7 +69,8 @@ public class Hitbox {
             System.out.println("Left punch hit");
             state.player1.movementDisabled = true;
             state.player1.currentAction = "got punched";
-            state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got punched,"+state.player1.movementDisabled); 
+            state.player1.takeDamage(state.currentPlayer.fighter.punchDamage);
+            state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got punched,"+state.player1.movementDisabled+","+state.player1.fighter.HP); 
             return "Left punch hit";
 
         } else if (state.currentPlayer.equals(state.player2) 
@@ -84,7 +87,8 @@ public class Hitbox {
             System.out.println("Right punch hit");
             state.player1.movementDisabled = true;
             state.player1.currentAction = "got punched";
-            state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got punched,"+state.player1.movementDisabled);
+            state.player1.takeDamage(state.currentPlayer.fighter.punchDamage);
+            state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got punched,"+state.player1.movementDisabled+","+state.player1.fighter.HP);
             return "Right punch hit";
         }   
 
@@ -112,7 +116,8 @@ public class Hitbox {
                 System.out.println("Left kick hit");
                 state.player2.movementDisabled = true;
                 state.player2.currentAction = "got kicked";
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got kicked,"+state.player2.movementDisabled); //Send data to the opponent
+                state.player2.takeDamage(state.currentPlayer.fighter.kickDamage);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got kicked,"+state.player2.movementDisabled+","+state.player2.fighter.HP); //Send data to the opponent
                 return "Left kick hit";
 
             } else if (state.currentPlayer.equals(state.player1) 
@@ -129,7 +134,8 @@ public class Hitbox {
                 System.out.println("Right kick hit");
                 state.player2.movementDisabled = true;
                 state.player2.currentAction = "got kicked";
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got kicked,"+state.player2.movementDisabled);
+                state.player2.takeDamage(state.currentPlayer.fighter.kickDamage);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got kicked,"+state.player2.movementDisabled+","+state.player2.fighter.HP);
                 return "Right kick hit";
             }
 
@@ -147,7 +153,8 @@ public class Hitbox {
                 System.out.println("Left kick hit");
                 state.player1.movementDisabled = true;
                 state.player1.currentAction = "got kicked";
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got kicked,"+state.player1.movementDisabled); 
+                state.player1.takeDamage(state.currentPlayer.fighter.kickDamage);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got kicked,"+state.player1.movementDisabled+","+state.player1.fighter.HP); 
                 return "Left kick hit";
 
             } else if (state.currentPlayer.equals(state.player2) 
@@ -164,7 +171,8 @@ public class Hitbox {
                 System.out.println("Right kick hit");
                 state.player1.movementDisabled = true;
                 state.player1.currentAction = "got kicked";
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got kicked,"+state.player1.movementDisabled);
+                state.player1.takeDamage(state.currentPlayer.fighter.kickDamage);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got kicked,"+state.player1.movementDisabled+","+state.player1.fighter.HP);
                 return "Right kick hit";
             }
 
@@ -185,7 +193,8 @@ public class Hitbox {
                 System.out.println("Left kick hit");
                 state.player2.movementDisabled = true;
                 state.player2.currentAction = "got kicked";
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got kicked,"+state.player2.movementDisabled); //Send data to the opponent
+                state.player2.takeDamage(state.currentPlayer.fighter.kickDamage);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got kicked,"+state.player2.movementDisabled+","+state.player2.fighter.HP); //Send data to the opponent
                 return "Left kick hit";
 
             } else if (state.currentPlayer.equals(state.player1) 
@@ -202,7 +211,8 @@ public class Hitbox {
                 System.out.println("Right kick hit");
                 state.player2.movementDisabled = true;
                 state.player2.currentAction = "got kicked";
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got kicked,"+state.player2.movementDisabled);
+                state.player2.takeDamage(state.currentPlayer.fighter.kickDamage);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got kicked,"+state.player2.movementDisabled+","+state.player2.fighter.HP);
                 return "Right kick hit";
             }
 
@@ -220,7 +230,8 @@ public class Hitbox {
                 System.out.println("Left kick hit");
                 state.player1.movementDisabled = true;
                 state.player1.currentAction = "got kicked";
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got kicked,"+state.player1.movementDisabled); 
+                state.player1.takeDamage(state.currentPlayer.fighter.kickDamage);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got kicked,"+state.player1.movementDisabled+","+state.player1.fighter.HP); 
                 return "Left kick hit";
 
             } else if (state.currentPlayer.equals(state.player2) 
@@ -237,7 +248,8 @@ public class Hitbox {
                 System.out.println("Right kick hit");
                 state.player1.movementDisabled = true;
                 state.player1.currentAction = "got kicked";
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got kicked,"+state.player1.movementDisabled);
+                state.player1.takeDamage(state.currentPlayer.fighter.kickDamage);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got kicked,"+state.player1.movementDisabled+","+state.player1.fighter.HP);
                 return "Right kick hit";
             }
         }
@@ -267,7 +279,8 @@ public class Hitbox {
             System.out.println("Left uppercut hit");
             state.player2.movementDisabled = true;
             state.player2.currentAction = "got uppercut";
-            state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got uppercut,"+state.player2.movementDisabled); //Send data to the opponent
+            state.player2.takeDamage(state.currentPlayer.fighter.uppercutDamage);
+            state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got uppercut,"+state.player2.movementDisabled+","+state.player2.fighter.HP); //Send data to the opponent
             return "Left uppercut hit";
 
         } else if (state.currentPlayer.equals(state.player1) 
@@ -283,7 +296,8 @@ public class Hitbox {
             System.out.println("Right uppercut hit");
             state.player2.movementDisabled = true;
             state.player2.currentAction = "got uppercut";
-            state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got uppercut,"+state.player2.movementDisabled);
+            state.player2.takeDamage(state.currentPlayer.fighter.uppercutDamage);
+            state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got uppercut,"+state.player2.movementDisabled+","+state.player2.fighter.HP);
             return "Right uppercut hit";
         }
 
@@ -300,7 +314,8 @@ public class Hitbox {
             System.out.println("Left uppercut hit");
             state.player1.movementDisabled = true;
             state.player1.currentAction = "got uppercut";
-            state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got uppercut,"+state.player1.movementDisabled); 
+            state.player1.takeDamage(state.currentPlayer.fighter.uppercutDamage);
+            state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got uppercut,"+state.player1.movementDisabled+","+state.player1.fighter.HP); 
             return "Left uppercut hit";
 
         } else if (state.currentPlayer.equals(state.player2) 
@@ -316,7 +331,8 @@ public class Hitbox {
             System.out.println("Right uppercut hit");
             state.player1.movementDisabled = true;
             state.player1.currentAction = "got uppercut";
-            state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got uppercut,"+state.player1.movementDisabled);
+            state.player1.takeDamage(state.currentPlayer.fighter.uppercutDamage);
+            state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got uppercut,"+state.player1.movementDisabled+","+state.player1.fighter.HP);
             return "Right uppercut hit";
         }   
 
@@ -344,7 +360,8 @@ public class Hitbox {
                 System.out.println("Left special hit");
                 state.player2.movementDisabled = true;
                 state.player2.currentAction = "got special";
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled); //Send data to the opponent
+                state.player2.takeDamage(state.currentPlayer.fighter.specialDamage);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.fighter.HP); //Send data to the opponent
                 return "Left special hit";
 
         } else if (state.currentPlayer.equals(state.player1) 
@@ -361,6 +378,7 @@ public class Hitbox {
                 System.out.println("Right special hit");
                 state.player2.movementDisabled = true;
                 state.player2.currentAction = "got special";
+                state.player2.takeDamage(state.currentPlayer.fighter.specialDamage);
                 state.ssm.sendText("client,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",got special,"+state.currentPlayer.movementDisabled);
                 return "Right special hit";
         }
@@ -379,7 +397,8 @@ public class Hitbox {
                 System.out.println("Left special hit");
                 state.player1.movementDisabled = true;
                 state.player1.currentAction = "got special";
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled); 
+                state.player1.takeDamage(state.currentPlayer.fighter.specialDamage);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.fighter.HP); 
                 return "Left special hit";
 
         } else if (state.currentPlayer.equals(state.player2) 
@@ -396,7 +415,8 @@ public class Hitbox {
                 System.out.println("Right special hit");
                 state.player1.movementDisabled = true;
                 state.player1.currentAction = "got special";
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled);
+                state.player1.takeDamage(state.currentPlayer.fighter.specialDamage);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.fighter.HP);
                 return "Right special hit";
         }   
         

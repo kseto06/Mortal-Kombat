@@ -2,6 +2,8 @@ package model;
 
 import java.awt.image.BufferedImage;
 
+import view.MainView;
+
 public class Player {
     // Properties
     public String name = "";
@@ -24,6 +26,10 @@ public class Player {
             fighter = new SubzeroFighter();
             fighter.name = "Subzero";
         }
+    }
+
+    public void takeDamage(int damage) {
+        this.fighter.HP -= damage;
     }
 
     public void punch(Player opponent) {

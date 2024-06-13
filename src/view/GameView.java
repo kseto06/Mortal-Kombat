@@ -273,6 +273,7 @@ public class GameView extends JPanel implements ActionListener {
 
             if (state.player1.currentX <= state.player2.currentX && state.player2.currentAction.equals("got special") && !state.player2.hasRun) {
                 state.player1.currentAnimationImg = state.player1.fighter.specialLeft;
+                hitbox.IceBallHitbox();
 
                 if (state.player2.currentAction.equals("got special") && !state.player2.hasRun && !state.player2.isBlocking) {
                     state.player2.currentAnimationImg = state.player2.fighter.staggerRight;
@@ -282,6 +283,7 @@ public class GameView extends JPanel implements ActionListener {
 
             } else if (state.player1.currentX > state.player2.currentX && state.player2.currentAction.equals("got special") && !state.player2.hasRun) {
                 state.player1.currentAnimationImg = state.player1.fighter.specialRight;
+                hitbox.IceBallHitbox();
 
                 if (state.player2.currentAction.equals("got special") && !state.player2.hasRun && !state.player2.isBlocking) {
                     state.player2.currentAnimationImg = state.player2.fighter.staggerLeft;
@@ -296,6 +298,7 @@ public class GameView extends JPanel implements ActionListener {
 
             if (state.player1.currentX <= state.player2.currentX && state.player1.currentAction.equals("got special") && !state.player1.hasRun) {
                 state.player2.currentAnimationImg = state.player2.fighter.specialRight;
+                hitbox.IceBallHitbox();
 
                 if (state.player1.currentAction.equals("got special") && !state.player1.hasRun && !state.player1.isBlocking) {
                     state.player1.currentAnimationImg = state.player1.fighter.staggerLeft;    
@@ -306,6 +309,7 @@ public class GameView extends JPanel implements ActionListener {
 
             } else if (state.player1.currentX > state.player2.currentX && state.player1.currentAction.equals("got special") && !state.player1.hasRun) {
                 state.player2.currentAnimationImg = state.player2.fighter.specialLeft;
+                hitbox.IceBallHitbox();
 
                 if (state.player1.currentAction.equals("got special") && !state.player1.hasRun && !state.player1.isBlocking) {
                     state.player1.currentAnimationImg = state.player1.fighter.staggerRight;
@@ -356,17 +360,25 @@ public class GameView extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent evt) {
         if (evt.getSource() == timer) {
-            if (state.player1 == null || state.player2 == null) { return; }
+            if (state.player1 == null || state.player2 == null) return;
+
+            if (state.player1.fighter.HP <= 0 || state.player2.fighter.HP <= 0) {
+                timer.stop();
+                GameOverView gameOverView = new GameOverView(state);
+                MainView.panel.add(gameOverView, "gameOver");
+                MainView.cardLayout.show(MainView.panel, "gameOver");    
+                return;
+            }
 
             if (state.player1.fighter.name.equals("Subzero") && state.player1.fighter.isSpecialBeingUsed == true && state.player1.currentAction.equals("special")) {
                 state.iceBall1.iceBallX += 10;
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",special,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",special,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall1,"+state.iceBall1.iceBallX+","+state.iceBall1.toRender);
             } 
 
             if (state.player2.fighter.name.equals("Subzero") && state.player2.fighter.isSpecialBeingUsed == true && state.player2.currentAction.equals("special")) {
                 state.iceBall2.iceBallX += 10;
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",special,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",special,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
             }
 
@@ -475,8 +487,8 @@ public class GameView extends JPanel implements ActionListener {
                 }
                 
 
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+","+state.player1.currentAction+","+state.player1.movementDisabled+","+state.player1.hasRun);
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+","+state.player2.currentAction+","+state.player2.movementDisabled+","+state.player2.hasRun);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+","+state.player1.currentAction+","+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+","+state.player2.currentAction+","+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun);
                 
             }
         });
@@ -511,7 +523,7 @@ public class GameView extends JPanel implements ActionListener {
                 state.player1.movementDisabled = false;
                 state.iceBall1.iceBallX = 0;    
                 state.iceBall1.toRender = false; 
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall1,"+state.iceBall1.iceBallX+","+state.iceBall1.toRender);
                 return;
             }
@@ -525,8 +537,8 @@ public class GameView extends JPanel implements ActionListener {
                 state.player1.movementDisabled = false;
                 state.iceBall1.iceBallX = 0;    
                 state.iceBall1.toRender = false;          
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall1,"+state.iceBall1.iceBallX+","+state.iceBall1.toRender);
                 return;
                 
@@ -539,8 +551,8 @@ public class GameView extends JPanel implements ActionListener {
                 state.player1.movementDisabled = false;
                 state.iceBall1.iceBallX = 0;
                 state.iceBall1.toRender = false;
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall1,"+state.iceBall1.iceBallX+","+state.iceBall1.toRender);
                 return;
             }
@@ -551,7 +563,7 @@ public class GameView extends JPanel implements ActionListener {
                 state.player1.movementDisabled = false;
                 state.player1.currentAction = "Idle";
                 state.iceBall1.iceBallX = 0; //Revert to default settings
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall1,"+state.iceBall1.iceBallX+","+state.iceBall1.toRender);
                 state.player1.fighter.isSpecialBeingUsed = false;
                 return;
@@ -561,15 +573,15 @@ public class GameView extends JPanel implements ActionListener {
             if (state.player1.currentX <= state.player2.currentX && state.iceBall1.toRender) { //Left
 
                 g.drawImage(state.iceBall1.IceBallLeft, state.player1.currentX + state.player1.fighter.WIDTH + state.iceBall1.iceBallX, (int)(680 - state.player1.fighter.HEIGHT), null);
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall1,"+state.iceBall1.iceBallX+","+state.iceBall1.toRender);
 
             } else if (state.player1.currentX > state.player2.currentX && state.iceBall1.toRender) { //Right
 
                 g.drawImage(state.iceBall1.IceBallRight, state.player1.currentX - state.iceBall1.iceBallX, (int)(680 - state.player1.fighter.HEIGHT), null);
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",Idle,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",got special,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall1,"+state.iceBall1.iceBallX+","+state.iceBall1.toRender);
             }
         }
@@ -589,7 +601,7 @@ public class GameView extends JPanel implements ActionListener {
                 state.player2.movementDisabled = false;
                 state.iceBall2.iceBallX = 0;    
                 state.iceBall2.toRender = false; 
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
                 return;
             }
@@ -603,8 +615,8 @@ public class GameView extends JPanel implements ActionListener {
                 state.player2.movementDisabled = false;
                 state.iceBall2.iceBallX = 0;
                 state.iceBall2.toRender = false;                        
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
                 return;
                 
@@ -617,8 +629,8 @@ public class GameView extends JPanel implements ActionListener {
                 state.player2.movementDisabled = false;
                 state.iceBall2.iceBallX = 0;
                 state.iceBall2.toRender = false;
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
                 return;
             }
@@ -629,7 +641,7 @@ public class GameView extends JPanel implements ActionListener {
                 state.player2.currentAction = "Idle";
                 state.iceBall2.iceBallX = 0; //Revert to default settings
                 state.iceBall2.toRender = false;
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
                 state.player2.fighter.isSpecialBeingUsed = false;
                 return;
@@ -638,15 +650,15 @@ public class GameView extends JPanel implements ActionListener {
             //Movement based on side:
             if (state.player1.currentX <= state.player2.currentX && state.iceBall2.toRender) { //Right
                
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
                 g.drawImage(state.iceBall2.IceBallRight, state.player2.currentX - state.iceBall2.iceBallX, (int)(680 - state.player2.fighter.HEIGHT), null);
                 
             } else if (state.player1.currentX > state.player2.currentX && state.iceBall2.toRender) { //Left
                 
-                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
-                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
+                state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
                 g.drawImage(state.iceBall2.IceBallLeft, state.player2.currentX + state.player2.fighter.WIDTH + state.iceBall2.iceBallX, (int)(680 - state.player2.fighter.HEIGHT), null);
             }
@@ -680,14 +692,14 @@ public class GameView extends JPanel implements ActionListener {
         player1HPCount.setFont(new Font("Cambria", Font.PLAIN, 18));
         player1HPCount.setForeground(Color.GREEN);
         player1HPCount.setSize(100, 30);
-        player1HPCount.setLocation(760 + 10, 21);
+        player1HPCount.setLocation(380, 21);
         player1HPCount.setVerticalAlignment(SwingConstants.CENTER);
         this.add(player1HPCount);
 
         player2HPCount.setFont(new Font("Cambria", Font.PLAIN, 18));
         player2HPCount.setForeground(Color.GREEN);
         player2HPCount.setSize(100, 30);
-        player2HPCount.setLocation(420, 21);
+        player2HPCount.setLocation(760, 21);
         player2HPCount.setVerticalAlignment(SwingConstants.CENTER);
         this.add(player2HPCount);
 

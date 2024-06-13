@@ -19,6 +19,10 @@ public class ScorpionFighter extends Fighter {
 
     public ScorpionFighter() {
         super();
+        this.punchDamage = 50;
+        this.kickDamage = 70;
+        this.uppercutDamage = 140;
+        this.specialDamage = 150;
 
         //Set width and height of generic fighter class
         WIDTH = 128; //(px) of idle image

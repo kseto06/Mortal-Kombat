@@ -28,7 +28,6 @@ public class MainView {
         this.state = state;
         homeView = new HomeView(this.state);
         characterSelectionView = new CharacterSelectionView(this.state);
-        gameView = new GameView(this.state);
         helpView = new HelpView();
         //Default settings. Using cardLayout to be able to switch between different screens throughout the game
         panel.setPreferredSize(new Dimension(1280, 720));

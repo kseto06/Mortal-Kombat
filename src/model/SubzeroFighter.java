@@ -10,7 +10,6 @@ public class SubzeroFighter extends Fighter {
     // Properties
     private long specialLastUsed = 0; // TODO: set to value
     public String name = "Subzero";
-    
 
     // Methods
     public void specialMove(Fighter opponent) {
@@ -19,6 +18,10 @@ public class SubzeroFighter extends Fighter {
 
     public SubzeroFighter() {
         super();
+        this.punchDamage = 50;
+        this.kickDamage = 70;
+        this.uppercutDamage = 140;
+        this.specialDamage = 30;
 
         //Set width and height of generic fighter class
         WIDTH = 102; //(px) of idle image

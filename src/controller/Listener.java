@@ -24,6 +24,10 @@ public class Listener implements ActionListener {
                 state.player2 = new Player(msgComponents[1]);
                 state.player2.chooseFighter(msgComponents[2]);
                 System.out.println(state.player2.fighter.name);
+                // send host selection in case client joined after host selected
+                if (state.player1 != null) {
+                    state.ssm.sendText("Host," + state.player1.name + "," + state.player1.fighter.name);
+                }
             }
 
             //Game View Socket
@@ -45,16 +49,20 @@ public class Listener implements ActionListener {
                     if (msgComponents[5] != null && !msgComponents[5].isEmpty()) {
                         state.player1.movementDisabled = msgComponents[5].equals("true");
                     }
-                    //Stagger Has Run Check
+                    // HP Update
                     if (msgComponents[6] != null && !msgComponents[6].isEmpty()) {
+                        state.player1.fighter.HP = Integer.valueOf(msgComponents[6]);
+                    }
+                    //Stagger Has Run Check
+                    if (msgComponents[7] != null && !msgComponents[6].isEmpty()) {
                         state.player1.hasRun = msgComponents[6].equals("true");
                     }
                     //Special Move Check
-                    if (msgComponents[7] != null && !msgComponents[7].isEmpty()) {
+                    if (msgComponents[8] != null && !msgComponents[7].isEmpty()) {
                         state.player1.fighter.isSpecialBeingUsed = msgComponents[7].equals("true");
                     }
                     //Block Check
-                    if (msgComponents[8] != null && !msgComponents[8].isEmpty()) {
+                    if (msgComponents[9] != null && !msgComponents[8].isEmpty()) {
                         state.player1.isBlocking = msgComponents[8].equals("true");
                     }
                 //General Exception to catch both ArrayIndexOutOfBoundsException and NullPointerException
@@ -79,16 +87,20 @@ public class Listener implements ActionListener {
                     if (msgComponents[5] != null && !msgComponents[5].isEmpty()) {
                         state.player2.movementDisabled = msgComponents[5].equals("true");
                     }
-                    //Stagger Has Run Check
+                    // HP Update
                     if (msgComponents[6] != null && !msgComponents[6].isEmpty()) {
+                        state.player2.fighter.HP = Integer.valueOf(msgComponents[6]);
+                    }
+                    //Stagger Has Run Check
+                    if (msgComponents[7] != null && !msgComponents[6].isEmpty()) {
                         state.player2.hasRun = msgComponents[6].equals("true");
                     }
                     //Special Move Check
-                    if (msgComponents[7] != null && !msgComponents[7].isEmpty()) {
+                    if (msgComponents[8] != null && !msgComponents[7].isEmpty()) {
                         state.player2.fighter.isSpecialBeingUsed = msgComponents[7].equals("true");
                     }
                     //Block Check
-                    if (msgComponents[8] != null && !msgComponents[8].isEmpty()) {
+                    if (msgComponents[9] != null && !msgComponents[8].isEmpty()) {
                         state.player2.isBlocking = msgComponents[8].equals("true");
                     }
                 } catch (Exception e) {
