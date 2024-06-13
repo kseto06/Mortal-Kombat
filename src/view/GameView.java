@@ -650,17 +650,17 @@ public class GameView extends JPanel implements ActionListener {
             //Movement based on side:
             if (state.player1.currentX <= state.player2.currentX && state.iceBall2.toRender) { //Right
                
+                g.drawImage(state.iceBall2.IceBallRight, state.player2.currentX - state.iceBall2.iceBallX, (int)(680 - state.player2.fighter.HEIGHT), null);
                 state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
-                g.drawImage(state.iceBall2.IceBallRight, state.player2.currentX - state.iceBall2.iceBallX, (int)(680 - state.player2.fighter.HEIGHT), null);
                 
             } else if (state.player1.currentX > state.player2.currentX && state.iceBall2.toRender) { //Left
                 
+                g.drawImage(state.iceBall2.IceBallLeft, state.player2.currentX + state.player2.fighter.WIDTH + state.iceBall2.iceBallX, (int)(680 - state.player2.fighter.HEIGHT), null);
                 state.ssm.sendText("host,"+state.player1.currentX+","+state.player1.currentY+","+state.player1.isAttacking+",got special,"+state.player1.movementDisabled+","+state.player1.fighter.HP+","+state.player1.hasRun+","+state.player1.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("client,"+state.player2.currentX+","+state.player2.currentY+","+state.player2.isAttacking+",Idle,"+state.player2.movementDisabled+","+state.player2.fighter.HP+","+state.player2.hasRun+","+state.player2.fighter.isSpecialBeingUsed);
                 state.ssm.sendText("iceBall2,"+state.iceBall2.iceBallX+","+state.iceBall2.toRender);
-                g.drawImage(state.iceBall2.IceBallLeft, state.player2.currentX + state.player2.fighter.WIDTH + state.iceBall2.iceBallX, (int)(680 - state.player2.fighter.HEIGHT), null);
             }
         }
 

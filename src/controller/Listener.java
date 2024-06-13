@@ -54,16 +54,16 @@ public class Listener implements ActionListener {
                         state.player1.fighter.HP = Integer.valueOf(msgComponents[6]);
                     }
                     //Stagger Has Run Check
-                    if (msgComponents[7] != null && !msgComponents[6].isEmpty()) {
-                        state.player1.hasRun = msgComponents[6].equals("true");
+                    if (msgComponents[7] != null && !msgComponents[7].isEmpty()) {
+                        state.player1.hasRun = msgComponents[7].equals("true");
                     }
                     //Special Move Check
-                    if (msgComponents[8] != null && !msgComponents[7].isEmpty()) {
-                        state.player1.fighter.isSpecialBeingUsed = msgComponents[7].equals("true");
+                    if (msgComponents[8] != null && !msgComponents[8].isEmpty()) {
+                        state.player1.fighter.isSpecialBeingUsed = msgComponents[8].equals("true");
                     }
                     //Block Check
-                    if (msgComponents[9] != null && !msgComponents[8].isEmpty()) {
-                        state.player1.isBlocking = msgComponents[8].equals("true");
+                    if (msgComponents[9] != null && !msgComponents[9].isEmpty()) {
+                        state.player1.isBlocking = msgComponents[9].equals("true");
                     }
                 //General Exception to catch both ArrayIndexOutOfBoundsException and NullPointerException
                 } catch (Exception e) {
@@ -92,16 +92,16 @@ public class Listener implements ActionListener {
                         state.player2.fighter.HP = Integer.valueOf(msgComponents[6]);
                     }
                     //Stagger Has Run Check
-                    if (msgComponents[7] != null && !msgComponents[6].isEmpty()) {
-                        state.player2.hasRun = msgComponents[6].equals("true");
+                    if (msgComponents[7] != null && !msgComponents[7].isEmpty()) {
+                        state.player2.hasRun = msgComponents[7].equals("true");
                     }
                     //Special Move Check
-                    if (msgComponents[8] != null && !msgComponents[7].isEmpty()) {
-                        state.player2.fighter.isSpecialBeingUsed = msgComponents[7].equals("true");
+                    if (msgComponents[8] != null && !msgComponents[8].isEmpty()) {
+                        state.player2.fighter.isSpecialBeingUsed = msgComponents[8].equals("true");
                     }
                     //Block Check
-                    if (msgComponents[9] != null && !msgComponents[8].isEmpty()) {
-                        state.player2.isBlocking = msgComponents[8].equals("true");
+                    if (msgComponents[9] != null && !msgComponents[9].isEmpty()) {
+                        state.player2.isBlocking = msgComponents[9].equals("true");
                     }
                 } catch (Exception e) {
                     //e.printStackTrace();
