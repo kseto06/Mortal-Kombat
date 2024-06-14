@@ -3,6 +3,7 @@ package model;
 import java.awt.event.ActionListener;
 
 import network.SuperSocketMaster;
+import view.ChatView;
 
 /**GameState class to keep track of the state of the game*/
 public class GameState {
@@ -34,4 +35,6 @@ public class GameState {
 
     //**Global Spear objects for Player 1 and 2*/
     public Spear spear1, spear2;
+    public StringBuilder chat = new StringBuilder();
+    public ChatView chatView;
 }

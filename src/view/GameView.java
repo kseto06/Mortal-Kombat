@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -936,6 +937,9 @@ public class GameView extends JPanel implements ActionListener {
             }
         }
 
+        ChatView chatView = new ChatView(state);
+        MainView.panel.add(chatView, "chatView");
+
         //Start the timer:
         timer.start();
 
@@ -1182,6 +1186,16 @@ public class GameView extends JPanel implements ActionListener {
                     state.ssm.sendText("client,"+state.currentPlayer.currentX+","+state.currentPlayer.currentY+","+state.currentPlayer.isAttacking+",idle,"+state.currentPlayer.movementDisabled+","+state.currentPlayer.fighter.HP+","+state.currentPlayer.hasRun+","+state.currentPlayer.fighter.isSpecialBeingUsed+","+state.currentPlayer.isBlocking);
 
                 }
+            }
+        });
+
+        // ctrl-c to toggle chat
+        this.getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.ALT_DOWN_MASK), "toggle chat");
+        this.getActionMap().put("toggle chat", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainView.cardLayout.show(MainView.panel, "chatView");
+                chatView.chatBox.requestFocusInWindow();
             }
         });
 
