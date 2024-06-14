@@ -28,29 +28,33 @@ import javax.swing.Timer;
 
 import model.GameState;
 
+/**
+ * JPanel to display the CharacterSelectionView when the game initially begins in the HomeScreen
+ */
 public class CharacterSelectionView extends JPanel implements ActionListener {
     //Properties
-    JLabel screenTitleLabel = new JLabel("Choose Your Fighter");
-    JLabel hostNameLabel = new JLabel("Player 1");
-    JLabel clientNameLabel = new JLabel("Player 2");
-    JLabel player1ChoiceLabel = new JLabel();
-    JLabel player2ChoiceLabel = new JLabel();
-    JLabel startingGameLabel = new JLabel();
+    private JLabel screenTitleLabel = new JLabel("Choose Your Fighter");
+    private JLabel hostNameLabel = new JLabel("Player 1");
+    private JLabel clientNameLabel = new JLabel("Player 2");
+    private JLabel player1ChoiceLabel = new JLabel();
+    private JLabel player2ChoiceLabel = new JLabel();
+    private JLabel startingGameLabel = new JLabel();
 
-    JButton chooseScorpionButton = new JButton();
-    JButton chooseSubZeroButton = new JButton();
-    GameState state;
-    GameView gameView;
-    public String hostChoice = "", clientChoice = "";
-    public boolean hostReady = false, clientReady = false;
+    private JButton chooseScorpionButton = new JButton();
+    private JButton chooseSubZeroButton = new JButton();
+    private GameState state;
+    private GameView gameView;
+    private String hostChoice = "", clientChoice = "";
+    private boolean hostReady = false, clientReady = false;
     //Images in this Class:
-    static BufferedImage imgScorpSelection, imgSubZeroSelection, imgEnlargedScorp, imgEnlargedSub, imgBackground; //Small images = 120x240, Enlarged images = 300x600
-
-    Timer timer = new Timer(1500, this);
+    private static BufferedImage imgScorpSelection, imgSubZeroSelection, imgEnlargedScorp, imgEnlargedSub; //Small images = 120x240, Enlarged images = 300x600
 
     //Methods:
 
-    //paintComponent method here paints the images of the characters, and other parts of the screen:
+    /**
+     * paintComponent method here paints the images of the characters, and other parts of the screen:
+     * @param g Graphics to paint images
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -119,13 +123,13 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
             gameView = new GameView(state);
             MainView.panel.add(gameView, "gameView");
             MainView.cardLayout.show(MainView.panel, "gameView");
-            // startGameTimer(); 
+            //startGameTimer(); 
         }
 
         this.repaint();
-
     }
 
+    //Start game after loading stuff for a bit
     private void startGameTimer() {
         Timer startGameTimer = new Timer(3000, new ActionListener() {
             @Override
@@ -155,6 +159,10 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
     }
 
 
+    /**
+     * actionPerfomed to listen for button pressed
+     * @param evt ActionEvent initialization
+     */
     @Override
     public void actionPerformed(ActionEvent evt) {
         //Change button functions to be ready/return based on what the user selects
@@ -192,7 +200,9 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
     }
  
  
-     //Constructor
+    /**
+     * Constructor to intialize CharacterSelectionView with GameState to update new Players and their chosen fighters
+     */
      public CharacterSelectionView(GameState state) {
         super();
 
@@ -202,7 +212,6 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
 
         //Loading the images:
         //Try to read the image from both the jar file and local drive
-        InputStream backgroundClass = this.getClass().getResourceAsStream("src/assets/TitleScreenBackground.jpeg");
         InputStream selectScorpClass = this.getClass().getResourceAsStream("src/assets/ScorpionSelection.png");
         InputStream selectSubClass = this.getClass().getResourceAsStream("src/assets/SubZeroSelection.png");
         InputStream enlargedScorpClass = this.getClass().getResourceAsStream("src/assets/ScorpionEnlarged.png");
@@ -210,7 +219,6 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
 
         if (selectScorpClass != null && selectSubClass != null) {
             try {
-                imgBackground = ImageIO.read(backgroundClass);
                 imgScorpSelection = ImageIO.read(selectScorpClass);
                 imgSubZeroSelection = ImageIO.read(selectSubClass);
                 imgEnlargedScorp = ImageIO.read(enlargedScorpClass);
@@ -221,7 +229,6 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
             }
         } else { //If it can't be found on the jar, search it locally
             try {
-                imgBackground = ImageIO.read(new File("src/assets/TitleScreenBackground.jpeg"));
                 imgScorpSelection = ImageIO.read(new File("src/assets/ScorpionSelection.png"));
                 imgSubZeroSelection = ImageIO.read(new File("src/assets/SubZeroSelection.png"));
                 imgEnlargedScorp = ImageIO.read(new File("src/assets/ScorpionEnlarged.png"));
@@ -265,7 +272,7 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
 
         startingGameLabel.setFont(new Font("Cambria", Font.BOLD, 22));
         startingGameLabel.setForeground(Color.BLACK);
-        startingGameLabel.setBounds(550-80, 500, 200, 50);
+        startingGameLabel.setBounds(550-40, 500, 200, 50);
         startingGameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         startingGameLabel.setVerticalAlignment(SwingConstants.CENTER);
         this.add(startingGameLabel);
@@ -290,7 +297,5 @@ public class CharacterSelectionView extends JPanel implements ActionListener {
         chooseSubZeroButton.setForeground(Color.WHITE);
         this.add(chooseSubZeroButton);
         chooseSubZeroButton.addActionListener(this);
-        
-        timer.start();
     }
 }

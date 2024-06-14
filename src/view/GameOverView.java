@@ -16,10 +16,13 @@ import java.awt.Font;
 public class GameOverView extends JPanel {
     //Properties
     GameState state;
-    JLabel title = new JLabel("Game Over!");
-    JLabel winner = new JLabel();
+    private JLabel title = new JLabel("Game Over!");
+    private JLabel winner = new JLabel();
     
-    //Constructor
+    /**
+     * Constructor to initialize the GameOverView
+     * @param state GameState determines if game is over or not
+     */
     public GameOverView(GameState state) {
         super();
         this.state = state;

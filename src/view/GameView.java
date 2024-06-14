@@ -28,12 +28,15 @@ import model.GameState;
 import model.Spear;
 import model.IceBall;
 
+/**
+ * GameView is the JPanel that displays the actual game
+ */
 public class GameView extends JPanel implements ActionListener {
     //Properties
-    GameState state;
-    Hitbox hitbox;
-    JLabel player1NameLabel = new JLabel(), player2NameLabel = new JLabel();
-    JLabel player1HPCount = new JLabel(), player2HPCount = new JLabel();
+    private GameState state;
+    private Hitbox hitbox;
+    private JLabel player1NameLabel = new JLabel(), player2NameLabel = new JLabel();
+    private JLabel player1HPCount = new JLabel(), player2HPCount = new JLabel();
     private final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
     //private boolean hasRun = false;
 
@@ -41,8 +44,8 @@ public class GameView extends JPanel implements ActionListener {
     /**
      * Fight Background
      */
-    BufferedImage imgBackground;
-    Timer timer = new Timer(1000/60, this);
+    private BufferedImage imgBackground;
+    private Timer timer = new Timer(1000/60, this);
 
     //Methods
       /**
@@ -390,6 +393,10 @@ public class GameView extends JPanel implements ActionListener {
         g.drawImage(state.player2.currentAnimationImg, state.player2.currentX, state.player2.currentY, this); // Client         
     }
 
+    /**
+     * actionPerfomed to control actions in the timer
+     * @param evt ActionEvent to control continuous game logic, particularly specialMove animations which are independent of key pressed
+     */
     @Override
     public void actionPerformed(ActionEvent evt) {
         if (evt.getSource() == timer) {
@@ -545,7 +552,7 @@ public class GameView extends JPanel implements ActionListener {
 
     /**
      * Method to animate Scorpion's Spear, if Scorpion uses his special move
-     * @param g Graphics g to draw ice ball images
+     * @param g Graphics g to draw spear images
      */
     private void animateSpear(Graphics g) {
         if (state.player1.fighter.name.equals("Scorpion") && state.player1.fighter.isSpecialBeingUsed && !state.player1.currentAction.equals("jump")) {
@@ -861,7 +868,10 @@ public class GameView extends JPanel implements ActionListener {
 
     }    
 
-    //Constructor
+    /**
+     * Constructor
+     * @param state GameView dependent on global state of the game due to character selected
+     */ 
     public GameView(GameState state) {
         super();
         this.state = state;
