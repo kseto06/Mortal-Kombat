@@ -16,15 +16,23 @@ import javax.swing.KeyStroke;
 import controller.ChatController;
 import model.GameState;
 
+/**Chat View class displays the chat when called in the GameView*/
 public class ChatView extends JPanel implements ActionListener {
     // Properties 
-    GameState state;
-    ChatController controller;
-    JTextArea chatHistory;
-    JTextField chatBox;
+    private GameState state;
+    private ChatController controller;
+    private JTextArea chatHistory;
+    /**JTextField representing Chat Box, can be opened in GameView*/
+    public JTextField chatBox;
     private final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 
     // Methods
+
+    /**
+     * actionPerformed method to listen to chatBox
+     * @param e ActionEvent to listen to changes in chatBox JTextField
+     */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == chatBox) {
             String message = chatBox.getText();
@@ -33,11 +41,16 @@ public class ChatView extends JPanel implements ActionListener {
             updateChat();
         }
     }
+
+    /**Function to update the chat history*/
     public void updateChat() {
         chatHistory.setText(state.chat.toString());
     }
 
-    // Constructor
+    /**
+     * Constructor to initialize the ChatView 
+     * @param state GameState to track ssm changes in chat
+     */
     public ChatView(GameState state) {
         super();
         this.state = state;

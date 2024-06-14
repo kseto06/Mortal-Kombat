@@ -24,17 +24,21 @@ public class GameState {
     /**ipAddress of the GameState, initialized in HomeView when host starts a game*/
     public String ipAddress;
 
-    //**Global SuperSocketMaster*/
+    /**Global SuperSocketMaster*/
     public SuperSocketMaster ssm;
 
-    //**Global Listener for SSM*/
+    /**Global Listener for SSM*/
     public ActionListener listener;
 
-    //**Global IceBall objects for Player 1 and 2*/
+    /**Global IceBall objects for Player 1 and 2*/
     public IceBall iceBall1, iceBall2;
 
-    //**Global Spear objects for Player 1 and 2*/
+    /**Global Spear objects for Player 1 and 2*/
     public Spear spear1, spear2;
+
+    /**Chat Input*/
     public StringBuilder chat = new StringBuilder();
+
+    /**Chat View, can be opened mid-game*/
     public ChatView chatView;
 }
