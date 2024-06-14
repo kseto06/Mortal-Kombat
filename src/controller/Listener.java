@@ -5,9 +5,16 @@ import java.awt.event.ActionListener;
 
 import model.*;
 
+/**
+ * Listener class listens to changes in the global GameState that relates to SSM
+ */
 public class Listener implements ActionListener {
     GameState state;
     
+    /**
+     * ActionPerformed here reads the socketed message text and assigns it to the GameState's variables
+     * @param evt ActionEvent to track changes in SSM through readText
+     */
     @Override
     public void actionPerformed(ActionEvent evt) {
         if (evt.getSource() == state.ssm) {
@@ -155,6 +162,10 @@ public class Listener implements ActionListener {
         }
     }
 
+    /**
+     * Constructor to initialize the Listener
+     * @param state Tracks changes in the GameState
+     */
     public Listener(GameState state) {
         this.state = state;
     }

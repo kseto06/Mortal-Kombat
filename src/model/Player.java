@@ -2,17 +2,32 @@ package model;
 
 import java.awt.image.BufferedImage;
 
-import view.MainView;
-
+/**Player class that stores the Player's attributes throughout the game*/
 public class Player {
     // Properties
+
+    /**Name of the Player*/
     public String name = "";
+
+    /**Chosen fighter of the Player*/
     public Fighter fighter;
+
+    /**Sets disabling and enabling movement for the player*/
     public boolean movementDisabled = false;
+
+    /**Tells if the player is pressing a key or not*/
     public boolean isKeyPressed = false;
+
+    /**Tells if the player is attacking or not*/
     public boolean isAttacking = false;
+
+    /**Tells if the player is blocking or not*/
     public boolean isBlocking = false;
-    public boolean hasRun = false; //check if stagger has run
+    
+    /**Checks if a stagger has run*/
+    public boolean hasRun = false; 
+
+    /**Checks*/
     public int currentX, currentY;
     public BufferedImage currentAnimationImg;
     public String currentAction;
