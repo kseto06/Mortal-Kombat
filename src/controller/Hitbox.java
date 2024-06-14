@@ -2,7 +2,7 @@ package controller;
 
 import model.GameState;
 
-//TODO: Create special move hitbox logic 
+/**Hitbox class stores the calculation logic for every attack in the game*/
 public class Hitbox {
     //Properties
     GameState state;

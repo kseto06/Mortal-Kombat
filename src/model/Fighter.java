@@ -5,15 +5,34 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * Blueprint class of a generic fighter. Properties of the Fighter are overidden later on dependent on the Fighter chosen
+ */
 public abstract class Fighter {
     // Properties
+
+    /**HP of the fighter*/
     public int HP = 1000;
+
+    /**Name of the fighter*/
     public String name;
+
+    /**ImageSet of the Fighter*/
     public BufferedImage idleLeft, idleRight, punchLeft, punchRight, kickLeft, kickRight, uppercutLeft, uppercutRight, specialLeft, specialRight, staggerLeft = null, staggerRight = null, blockLeft = null, blockRight = null;
+    
+    /**Width and Height of the Fighter's image*/
     public int WIDTH, HEIGHT;
+
+    //**Determines if the fighter is currently using their special move*/
     public boolean isSpecialBeingUsed = false;
+
+    //**Base Damage of the Fighter that all values relate to*/
     public int baseDmg = 100;
+
+    //**Damage of Fighter basic attacks*/
     public int punchDamage, kickDamage, uppercutDamage;
+
+    //**Damage of special attack*/
     public int specialDamage = 100;
     
     // Methods
