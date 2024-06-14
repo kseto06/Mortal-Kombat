@@ -95,7 +95,7 @@ public class Player {
         movementDisabled = false; 
         isBlocking = false;
     }
-
+    
     //Constructor
     public Player(String name) {
         this.name = name;

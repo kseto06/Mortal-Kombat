@@ -3,6 +3,7 @@ package model;
 import java.awt.event.ActionListener;
 
 import network.SuperSocketMaster;
+import view.ChatView;
 
 public class GameState {
     // Properties
@@ -15,4 +16,6 @@ public class GameState {
     public ActionListener listener;
     public IceBall iceBall1, iceBall2;
     public Spear spear1, spear2;
+    public StringBuilder chat = new StringBuilder();
+    public ChatView chatView;
 }
