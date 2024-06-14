@@ -50,7 +50,7 @@ public class MainView {
         panel.setLayout(cardLayout);
         panel.add(homeView, "homeScreen");
         panel.add(characterSelectionView, "characterSelectionView");
-        //panel.add(helpView, "helpView");
+        // panel.add(helpView, "helpView");
         //panel.add(gameView, "gameView");
         cardLayout.show(panel, "homeScreen");
 
