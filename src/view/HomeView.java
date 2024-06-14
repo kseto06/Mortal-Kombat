@@ -111,6 +111,8 @@ public class HomeView extends JPanel implements ActionListener {
             hostButtonPressed = true;
 
         } else if (evt.getSource() == helpButton) {
+            HelpView helpView = new HelpView();
+            MainView.panel.add(helpView, "helpView");
             MainView.cardLayout.show(MainView.panel, "helpView");
         }
     }

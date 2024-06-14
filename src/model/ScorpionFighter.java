@@ -1,6 +1,5 @@
 package model;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,20 +8,10 @@ import javax.imageio.ImageIO;
 
 public class ScorpionFighter extends Fighter {
     // Properties
-    private long specialLastUsed = 0; // TODO: set to value
     public String name = "Scorpion";
 
-    // Methods
-    public void specialMove(Fighter opponent) {
-        // TO-DO: Implement attack method
-    }
-
     public ScorpionFighter() {
-        super();
-        this.punchDamage = 50;
-        this.kickDamage = 70;
-        this.uppercutDamage = 140;
-        this.specialDamage = 150;
+        this.loadData(this.name);
 
         //Set width and height of generic fighter class
         WIDTH = 128; //(px) of idle image
