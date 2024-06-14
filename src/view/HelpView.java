@@ -188,7 +188,7 @@ public class HelpView extends JPanel implements ActionListener {
 
         title.setText("Tutorial: Blocking");
         instruction.setText("Press (U) to block");
-        description.setText("Blocking will reduce damage taken");
+        description.setText("Blocking will reduce all damage taken");
     }
 
     private void iFrame(Graphics g) {
@@ -207,7 +207,7 @@ public class HelpView extends JPanel implements ActionListener {
     private void altCFrame(Graphics g) {
         title.setText("Tutorial: Chatting");
         instruction.setText("Press (ALT)+(C) to Chat");
-        description.setText("It is possible to chat during the game." + '\n' +
+        description.setText("It is possible to chat during the game. Type a message and press (ENTER) to send." + '\n' +
         "Use the above command to go into the chat feature, and return the game by pressing it again." +'\n');
 
         Timer sleep = new Timer(6000, e -> {
