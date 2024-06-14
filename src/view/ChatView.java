@@ -36,6 +36,9 @@ public class ChatView extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == chatBox) {
             String message = chatBox.getText();
+            if (message.length() == 0) {
+                return;
+            }
             controller.sendMessage(message);
             chatBox.setText("");
             updateChat();

@@ -160,7 +160,8 @@ public class Listener implements ActionListener {
             }
 
             if (msgComponents[0].equals("chat")) {
-                state.chat.append(msgComponents[1] + ": " + msgComponents[2] + "\n");
+                String chatMsg = msg.split(",", 3)[2];
+                state.chat.append(msgComponents[1] + ": " + chatMsg + "\n");
                 state.chatView.updateChat();
             }
         }
