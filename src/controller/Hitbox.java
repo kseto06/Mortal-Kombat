@@ -28,7 +28,6 @@ public class Hitbox {
 
             //Check for blocking
             if (state.player2.isBlocking) {
-                //TODO: Reduced damage if opponent blocking
                 return "punch blocked";
             }
             
@@ -47,7 +46,6 @@ public class Hitbox {
 
             //Check for blocking
             if (state.player2.isBlocking) {
-                //TODO: Reduced damage if opponent blocking
                 return "punch blocked";
             }
             
@@ -66,7 +64,6 @@ public class Hitbox {
 
             //Check for blocking
             if (state.player1.isBlocking) {
-                //TODO: Reduced damage if opponent blocking
                 return "punch blocked";
             }
 
@@ -84,7 +81,6 @@ public class Hitbox {
 
             //Check for blocking
             if (state.player1.isBlocking) {
-                //TODO: Reduced damage if opponent blocking
                 return "punch blocked";
             }
 
@@ -117,7 +113,6 @@ public class Hitbox {
 
                 //Check for blocking
                 if (state.player2.isBlocking) {
-                    //TODO: Reduced damage if opponent blocking
                     return "kick blocked";
                 }
 
@@ -135,7 +130,6 @@ public class Hitbox {
 
                 //Check for blocking
                 if (state.player2.isBlocking) {
-                    //TODO: Reduced damage if opponent blocking
                     return "kick blocked";
                 }
 
@@ -154,7 +148,6 @@ public class Hitbox {
 
                 //Check for blocking
                 if (state.player1.isBlocking) {
-                    //TODO: Reduced damage if opponent blocking
                     return "kick blocked";
                 }
 
@@ -172,7 +165,6 @@ public class Hitbox {
 
                 //Check for blocking
                 if (state.player1.isBlocking) {
-                    //TODO: Reduced damage if opponent blocking
                     return "kick blocked";
                 }
 
@@ -194,7 +186,6 @@ public class Hitbox {
 
                 //Check for blocking
                 if (state.player2.isBlocking) {
-                    //TODO: Reduced damage if opponent blocking
                     return "kick blocked";
                 }
 
@@ -212,7 +203,6 @@ public class Hitbox {
 
                 //Check for blocking
                 if (state.player2.isBlocking) {
-                    //TODO: Reduced damage if opponent blocking
                     return "kick blocked";
                 }
                 
@@ -231,7 +221,6 @@ public class Hitbox {
 
                 //Check for blocking
                 if (state.player1.isBlocking) {
-                    //TODO: Reduced damage if opponent blocking
                     return "kick blocked";
                 }
 
@@ -249,7 +238,6 @@ public class Hitbox {
 
                 //Check for blocking
                 if (state.player1.isBlocking) {
-                    //TODO: Reduced damage if opponent blocking
                     return "kick blocked";
                 }
 
@@ -284,7 +272,6 @@ public class Hitbox {
 
             //Check for blocking
             if (state.player2.isBlocking) {
-                //TODO: Reduced damage if opponent blocking
                 return "uppercut blocked";
             }
 
@@ -301,7 +288,6 @@ public class Hitbox {
 
             //Check for blocking
             if (state.player2.isBlocking) {
-                //TODO: Reduced damage if opponent blocking
                 return "uppercut blocked";
             }
 
@@ -319,7 +305,6 @@ public class Hitbox {
 
             //Check for blocking
             if (state.player1.isBlocking) {
-                //TODO: Reduced damage if opponent blocking
                 return "uppercut blocked";
             }
 
@@ -336,7 +321,6 @@ public class Hitbox {
 
             //Check for blocking
             if (state.player1.isBlocking) {
-                //TODO: Reduced damage if opponent blocking
                 return "uppercut blocked";
             }
 
@@ -366,7 +350,6 @@ public class Hitbox {
 
                 //Check for blocking
                 if (state.player2.isBlocking) {
-                    //TODO: Reduced damage if opponent blocking
                     return "ice ball blocked";
                 }
 
@@ -384,7 +367,6 @@ public class Hitbox {
 
                 //Check for blocking
                 if (state.player2.isBlocking) {
-                    //TODO: Reduced damage if opponent blocking
                     return "ice ball blocked";
                 }
 
@@ -403,7 +385,6 @@ public class Hitbox {
 
                 //Check for blocking
                 if (state.player1.isBlocking) {
-                    //TODO: Reduced damage if opponent blocking
                     return "ice ball blocked";
                 }
 
@@ -421,7 +402,6 @@ public class Hitbox {
 
                 //Check for blocking
                 if (state.player1.isBlocking) {
-                    //TODO: Reduced damage if opponent blocking
                     return "ice ball blocked";
                 }
 
@@ -451,7 +431,6 @@ public class Hitbox {
 
                 //Check for blocking
                 if (state.player2.isBlocking) {
-                    //TODO: Reduced damage if opponent blocking
                     return "spear blocked";
                 }
 
@@ -469,7 +448,6 @@ public class Hitbox {
 
                 //Check for blocking
                 if (state.player2.isBlocking) {
-                    //TODO: Reduced damage if opponent blocking
                     return "spear blocked";
                 }
 
@@ -488,7 +466,6 @@ public class Hitbox {
 
                 //Check for blocking
                 if (state.player1.isBlocking) {
-                    //TODO: Reduced damage if opponent blocking
                     return "spear blocked";
                 }
 
@@ -506,7 +483,6 @@ public class Hitbox {
 
                 //Check for blocking
                 if (state.player1.isBlocking) {
-                    //TODO: Reduced damage if opponent blocking
                     return "spear blocked";
                 }
 

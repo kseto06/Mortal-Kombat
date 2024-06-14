@@ -4,6 +4,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+/**Class to start host connection, through Multicast Connection*/
 public class MulticastServer {
     private String ip;
     private int port;

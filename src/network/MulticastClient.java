@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**Class to connect client to host, through Multicast Connection*/
 public class MulticastClient {
     private String ip;
     private int port;

@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+/**Class to store Sub-Zero's attributes*/
 public class SubzeroFighter extends Fighter {
     // Properties
 
