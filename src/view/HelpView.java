@@ -6,7 +6,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
@@ -25,25 +24,24 @@ import model.ScorpionFighter;
 import model.SubzeroFighter;
 
 /**
- * Help Screen will essentially be a Button Tutorial on how to play the fighting game
+ * This class is the Help Screen, which will essentially be a Button Tutorial on how to play the fighting game
  * For example, how to punch, block, etc.
  */
 public class HelpView extends JPanel implements ActionListener {
     //Properties
     private final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
-    ScorpionFighter helpScorpion;
-    int scorpX, scorpY;
-    SubzeroFighter helpSubzero;
-    int subX, subY;
-    BufferedImage currentScorpionImg;
-    BufferedImage currentSubzeroImg;
-    public boolean[] tutorialFramePassed = new boolean[8];
-    boolean isDisplayed = false;
-    Timer timer = new Timer(1000/60, this);
-    JLabel title = new JLabel();
-    JLabel instruction = new JLabel();
-    JTextArea description = new JTextArea();
-    JButton backButton = new JButton("Back");
+    private ScorpionFighter helpScorpion;
+    private int scorpX, scorpY;
+    private SubzeroFighter helpSubzero;
+    private int subX, subY;
+    private BufferedImage currentScorpionImg;
+    private BufferedImage currentSubzeroImg;
+    private boolean[] tutorialFramePassed = new boolean[8];
+    private boolean isDisplayed = false;
+    private JLabel title = new JLabel();
+    private JLabel instruction = new JLabel();
+    private JTextArea description = new JTextArea();
+    private JButton backButton = new JButton("Back");
     
     //Methods
     @Override
@@ -239,7 +237,9 @@ public class HelpView extends JPanel implements ActionListener {
         attackTimer.start();
     }
     
-    //Constructor
+    /**
+     * Constructor to intialize the HelpView
+     */
     public HelpView() {
         super();
         this.setLayout(null);

@@ -21,7 +21,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
@@ -33,38 +32,38 @@ import network.MulticastServer;
 import network.SuperSocketMaster;
 
 import java.util.ArrayList;
-
+/**
+ * HomeView class is the JPanel that displays the Home Screen of the game
+ */
 public class HomeView extends JPanel implements ActionListener {
     //Properties
-    JLabel title = new JLabel("MORTAL KOMBAT");
-    JTextField usernameField;
-    JTable serverListTable;
+    private JLabel title = new JLabel("MORTAL KOMBAT");
+    private JTextField usernameField;
     //Array to store buttons and labels
-    public JLabel[] labelList;
-    public JButton[] buttonList;
+    private JLabel[] labelList;
+    private JButton[] buttonList;
 
-    public JButton hostButton = new JButton("Host Game");
+    private JButton hostButton = new JButton("Host Game");
     //public JButton joinButton = new JButton("Scan");
-    public JButton helpButton = new JButton("Help");
-    BufferedImage imgBackground;
+    private JButton helpButton = new JButton("Help");
+    private BufferedImage imgBackground;
 
-    GameState state;
+    private GameState state;
 
     //Server Properties:
-    MulticastServer ms;
-    MulticastClient mc;
-    public String ipAddress;
+    private MulticastServer ms;
+    private MulticastClient mc;
+    private String ipAddress;
 
-    Timer timer = new Timer(1500, this);
-    ArrayList<String> serverList = new ArrayList<String>();
-
-    //CardLayout cardLayout = new CardLayout();
-    //JPanel cardContainer = new JPanel(cardLayout); 
-    //Creating a new JPanel cardContainer allows showing new JPanel in dynamically added button (might change to boolean)
-    public static boolean joinButtonPressed = false;
-    public static boolean hostButtonPressed = false;
+    private Timer timer = new Timer(1500, this);
+    private ArrayList<String> serverList = new ArrayList<String>();
 
     //Methods
+    
+    /**
+     * Overrided paintComponent to draw the home screen's background image
+     * @param g Graphics to draw image
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -73,6 +72,11 @@ public class HomeView extends JPanel implements ActionListener {
         g.drawImage(imgBackground, 0, 0, getWidth(), getHeight(), this);
     }
 
+    /**
+     * Overrided actionPerformed to send continuous stream of data of the host if they start a game, and recieve data if they are a client in Multicast
+     * Also determines whether or not the host, help, or join buttons are pressed
+     * @param evt ActionEvent to control continuous functionality with timer
+     */
     @Override
     public void actionPerformed(ActionEvent evt) {
         //Loop sending messages 
@@ -87,7 +91,6 @@ public class HomeView extends JPanel implements ActionListener {
 
         //Receiving messages
         if (evt.getSource() == mc) {      
-            //System.out.println(mc.readText()); 
             //Keep trying to update the server lists:
             this.addServer(mc.readText());
 
@@ -108,7 +111,6 @@ public class HomeView extends JPanel implements ActionListener {
             state.ipAddress = ipAddress;
 
             MainView.cardLayout.show(MainView.panel, "characterSelectionView");
-            hostButtonPressed = true;
 
         } else if (evt.getSource() == helpButton) {
             HelpView helpView = new HelpView();
@@ -117,7 +119,7 @@ public class HomeView extends JPanel implements ActionListener {
         }
     }
 
-    //Position serverList and buttons. Do button functionality somewhere else
+    //Position serverList and buttons.
     private void addServer(String readText) {
         if (serverList.contains(readText)) {
             return;
@@ -154,7 +156,7 @@ public class HomeView extends JPanel implements ActionListener {
             buttonList[i].setLocation(1280/10+710, 430 + i*65);
             this.add(buttonList[i]);
 
-            buttonList[i].addActionListener(new ActionListener() {
+            buttonList[i].addActionListener(new ActionListener() { //Dynamic joinButton
                 public void actionPerformed(ActionEvent e) {
                     //Two people now in-game, show the Character Selection Screen 
                     state.player2 = new Player(usernameField.getText());
@@ -172,7 +174,9 @@ public class HomeView extends JPanel implements ActionListener {
         }
     }
 
-    //Constructor
+    /**
+     * Constructor to initialize the HomeView, with GameState to start state's SSM
+     */
     public HomeView(GameState state) {
         super();
         this.state = state;
@@ -224,14 +228,6 @@ public class HomeView extends JPanel implements ActionListener {
         hostButton.setLocation(1280/10+260, 245);
         hostButton.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(hostButton);
-
-        /* 
-        joinButton.setFont(new Font("Cambria", Font.PLAIN, 38));
-        joinButton.setSize(500, 60);
-        joinButton.setLocation(1280/10+250, 350);
-        joinButton.setHorizontalAlignment(SwingConstants.CENTER);
-        this.add(joinButton);
-        */
 
         helpButton.setFont(new Font("Cambria", Font.PLAIN, 38));
         helpButton.setSize(500, 60);

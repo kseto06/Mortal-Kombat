@@ -7,6 +7,9 @@ import view.ChatView;
 
 public class GameState {
     // Properties
+    /** 
+     * GameState player 1 initialization
+     */
     public Player player1;
     public Player player2;
     public Player currentPlayer;

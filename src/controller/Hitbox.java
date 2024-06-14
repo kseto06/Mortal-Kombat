@@ -8,6 +8,10 @@ public class Hitbox {
     GameState state;
 
     //Methods
+    /**
+     * Hitbox function to calculate if a punch was hit
+     * @return String value that tells how the punch was hit (right, left, missed)
+     */
     public String punchHitbox() {
         //Differentiate based on fighter, position, and opponent width
         int punchWidth = 0;
@@ -95,6 +99,10 @@ public class Hitbox {
         return "No punch hit"; //Default case
     }
 
+    /**
+     * Hitbox function to calculate if a kick was hit
+     * @return String value that tells how the kick was hit (right, left, missed)
+     */
     public String kickHitbox() {
         //Differentiate based on fighter, position, and opponent width
         int kickWidth = 0;
@@ -257,6 +265,10 @@ public class Hitbox {
         return "No kick hit"; //Default case
     }
 
+    /**
+     * Hitbox function to calculate if an uppercut was hit
+     * @return String value that tells how the uppercut was hit (right, left, missed)
+     */
     public String uppercutHitbox() {
         //Differentiate based on fighter, position, and opponent width
         int uppercutWidth = 0;
@@ -341,6 +353,7 @@ public class Hitbox {
 
     /**
      * Calculates the hitbox for an ice ball hit (exclusive to a SubZero fighter)
+     * @return String value that tells how the ice ball was hit (right, left, missed)
      */
     public String IceBallHitbox() {
         //Differentiate based on fighter, position, and opponent width
@@ -424,7 +437,8 @@ public class Hitbox {
     }
 
     /**
-     * Calculates the hitbox for an spear hit (exclusive to a Scorpion fighter)
+     * Calculates the hitbox for a spear hit (exclusive to a Scorpion fighter)
+     * @return String value that tells how the spear was hit (right, left, missed)
      */
     public String SpearHitbox() {
         //Differentiate based on fighter, position, and opponent width
@@ -507,7 +521,10 @@ public class Hitbox {
         return "No spear hit"; //Default case
     }
 
-    //Constructor
+    /**
+     * Constructor to intialize the Hitbox
+     * @param state Initialize global GameState
+     */
     public Hitbox(GameState state) {
         this.state = state;
     }
