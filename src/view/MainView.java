@@ -35,8 +35,6 @@ public class MainView {
     private GameState state;
     private HomeView homeView;
     private CharacterSelectionView characterSelectionView;
-    private HelpView helpView;
-
     /**
      * Constructor to initalize the MainView
      */
@@ -50,8 +48,6 @@ public class MainView {
         panel.setLayout(cardLayout);
         panel.add(homeView, "homeScreen");
         panel.add(characterSelectionView, "characterSelectionView");
-        // panel.add(helpView, "helpView");
-        //panel.add(gameView, "gameView");
         cardLayout.show(panel, "homeScreen");
 
         //Default settings
