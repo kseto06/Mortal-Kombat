@@ -36,7 +36,7 @@ public class HelpView extends JPanel implements ActionListener {
     private int subX, subY;
     private BufferedImage currentScorpionImg;
     private BufferedImage currentSubzeroImg;
-    private boolean[] tutorialFramePassed = new boolean[8];
+    private boolean[] tutorialFramePassed = new boolean[9];
     private boolean isDisplayed = false;
     private JLabel title = new JLabel();
     private JLabel instruction = new JLabel();
@@ -91,9 +91,14 @@ public class HelpView extends JPanel implements ActionListener {
             case 7:
                 iFrame(g);
                 break;
+            case 8:
+                altCFrame(g);
+                break;
             default:
                 title.setText("Training Passed");
                 instruction.setText("Press Back to return to the home screen");
+                description.setText("");
+                description.setVisible(false);
                 break;
         }
         
@@ -188,7 +193,7 @@ public class HelpView extends JPanel implements ActionListener {
 
     private void iFrame(Graphics g) {
         if (isDisplayed) {
-            Timer sleep = new Timer(5000, e -> {
+            Timer sleep = new Timer(10000, e -> {
                 tutorialFramePassed[7] = true;
                 isDisplayed = false;
                 repaint(); // Trigger a repaint after the delay
@@ -197,6 +202,20 @@ public class HelpView extends JPanel implements ActionListener {
             sleep.start();
             isDisplayed = false; // Ensures the timer is only set up once
         }
+    }
+
+    private void altCFrame(Graphics g) {
+        title.setText("Tutorial: Chatting");
+        instruction.setText("Press (ALT)+(C) to Chat");
+        description.setText("It is possible to chat during the game." + '\n' +
+        "Use the above command to go into the chat feature, and return the game by pressing it again." +'\n');
+
+        Timer sleep = new Timer(6000, e -> {
+            tutorialFramePassed[8] = true;
+            repaint();
+        });
+        sleep.setRepeats(false);
+        sleep.start();
     }
 
     private void jumpTimer() {

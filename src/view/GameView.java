@@ -39,12 +39,8 @@ public class GameView extends JPanel implements ActionListener {
     private JLabel player1NameLabel = new JLabel(), player2NameLabel = new JLabel();
     private JLabel player1HPCount = new JLabel(), player2HPCount = new JLabel();
     private final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
-    //private boolean hasRun = false;
 
     //Init images
-    /**
-     * Fight Background
-     */
     private BufferedImage imgBackground;
     private Timer timer = new Timer(1000/60, this);
 
@@ -58,11 +54,6 @@ public class GameView extends JPanel implements ActionListener {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g.drawImage(imgBackground, 0, 0, null);
-        // System.out.println("Special being used? "+state.player2.fighter.isSpecialBeingUsed); 
-
-        // g2d.setColor(Color.BLACK);
-        // g2d.setStroke(new BasicStroke(4.0f));
-        // g2d.drawLine(0, 680, 1280, 680); //The ground
 
         //Health bars and Player name labels
         g2d.setColor(Color.RED);
