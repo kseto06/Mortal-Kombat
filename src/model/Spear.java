@@ -34,7 +34,9 @@ public class Spear {
 
     //Methods
 
-    //Constructor
+    /**
+     * Constructor to initalize Scorpion's Spear
+     */
     public Spear() {
         InputStream spearLeftClass = this.getClass().getResourceAsStream("src/assets/SpearLeft.png");
         InputStream spearRightClass = this.getClass().getResourceAsStream("src/assets/SpearRight.png");

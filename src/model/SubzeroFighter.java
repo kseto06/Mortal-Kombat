@@ -8,8 +8,11 @@ import javax.imageio.ImageIO;
 
 public class SubzeroFighter extends Fighter {
     // Properties
+
+    /**Name of the Sub-Zero Fighter*/
     public String name = "Subzero";
 
+    /**Constructor to initialize Sub-Zero's images and dimensions*/
     public SubzeroFighter() {
         this.loadData(this.name);
 

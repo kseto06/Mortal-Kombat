@@ -36,6 +36,11 @@ public abstract class Fighter {
     public int specialDamage = 100;
     
     // Methods
+
+    /**
+     * Loads the data and assigns it to properties from the .csv file
+     * @param name Name of the fighter -- fighter's have different datasets
+     */
     public void loadData(String name) {
         // read src/data/fighters.csv
         // format: name, hp, baseDmg, specialDmg

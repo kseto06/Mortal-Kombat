@@ -27,12 +27,21 @@ public class Player {
     /**Checks if a stagger has run*/
     public boolean hasRun = false; 
 
-    /**Checks*/
+    /**X and Y positions of the player's fighter*/
     public int currentX, currentY;
+
+    /**Stores the current animation image of the player in the game*/
     public BufferedImage currentAnimationImg;
+
+    /**Stores the current action of the player, ex: punch/got punched*/
     public String currentAction;
     
     // Methods
+
+    /**
+     * Function to choose the fighter in CharacterSelectionScreen
+     * @param fighterName name of the Fighter
+     */
     public void chooseFighter(String fighterName) {
         if (fighterName.equals("Scorpion")) {
             fighter = new ScorpionFighter();
@@ -43,10 +52,18 @@ public class Player {
         }
     }
 
+    /**
+     * Function to subtract the fighter's HP when they take damage
+     * @param damage Amount of damage taken 
+     */ 
     public void takeDamage(int damage) {
         this.fighter.HP -= damage;
     }
 
+    /**
+     * Function to track if a player punches
+     * @param opponent opponent player parameter
+     */
     public void punch(Player opponent) {
         if (currentX <= opponent.currentX) {
             currentAnimationImg = fighter.punchLeft;
@@ -57,6 +74,10 @@ public class Player {
         }
     }
 
+    /**
+     * Function to track if a player kicks
+     * @param opponent opponent player parameter
+     */
     public void kick(Player opponent) {
         if (currentX <= opponent.currentX) {
             currentAnimationImg = fighter.kickLeft;
@@ -67,6 +88,10 @@ public class Player {
         }
     }
 
+    /**
+     * Function to track if a player uppercuts
+     * @param opponent opponent player parameter
+     */
     public void uppercut(Player opponent) {
         if (currentX <= opponent.currentX) {
             currentAnimationImg = fighter.uppercutLeft;
@@ -77,6 +102,10 @@ public class Player {
         }
     }
 
+    /**
+     * Function to track if a player uses their special move
+     * @param opponent opponent player parameter
+     */
     public void specialMove(Player opponent) {
         if (currentX <= opponent.currentX) {
             currentAnimationImg = fighter.specialLeft;
@@ -89,6 +118,10 @@ public class Player {
         }
     }
 
+    /**
+     * Function to track if a player blocks
+     * @param opponent opponent player parameter
+     */
     public void block(Player opponent) {
         if (currentX <= opponent.currentX) {
             currentAnimationImg = fighter.blockLeft;
@@ -100,6 +133,10 @@ public class Player {
         isBlocking = true;
     }
 
+    /**
+     * Function to track if a player stops blocking
+     * @param opponent opponent player parameter
+     */
     public void blockRelease(Player opponent) {
         if (currentX <= opponent.currentX) {
             currentAnimationImg = fighter.idleLeft;
@@ -111,7 +148,10 @@ public class Player {
         isBlocking = false;
     }
     
-    //Constructor
+    /**
+     * Constructor to create the player
+     * @param name Name of the player
+     */
     public Player(String name) {
         this.name = name;
     }

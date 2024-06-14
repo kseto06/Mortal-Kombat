@@ -34,7 +34,9 @@ public class IceBall {
 
     //Methods
 
-    //Constructor
+    /**
+     * Constructor to initialize the IceBall
+     */
     public IceBall() {
         InputStream iceBallLeftClass = this.getClass().getResourceAsStream("src/assets/IceBallLeft.png");
         InputStream iceBallRightClass = this.getClass().getResourceAsStream("src/assets/IceBallRight.png");

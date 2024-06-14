@@ -6,10 +6,14 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+/**Class to store Scorpion's attributes*/
 public class ScorpionFighter extends Fighter {
     // Properties
+
+    /**Name of the Scorpion Fighter*/
     public String name = "Scorpion";
 
+    /**Constructor to initialize Scorpion's images and dimensions*/
     public ScorpionFighter() {
         this.loadData(this.name);
 
